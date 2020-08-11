@@ -6,13 +6,25 @@ class lista extends Component {
     constructor(props){
         super(props)
         this.state={
-            tareas:this.props.tareas
+            tarea:{}
         }
     }
     componentDidUpdate(prevprop){
         if (this.props.tareas != prevprop.tareas) {
-            this.setState({tareas:this.props.tareas})
-            console.log(this.props.tareas)
+            this.props.tareas.map(tarea=>{
+                    if (tarea.key===this.state.tarea.key) {
+                        this.props.tareadetalles(tarea)
+                    }
+            }
+            )
+        }
+        if (this.props.tareasAsignadas != prevprop.tareasAsignadas) {
+            this.props.tareasAsignadas.map(tarea=>{
+                    if (tarea.key===this.state.tarea.key) {
+                        this.props.tareadetalles(tarea)
+                    }
+            }
+        )
         }
     }
     toggleTarea(id){
@@ -26,6 +38,7 @@ class lista extends Component {
         }
     }
     toggleRight=(provid,render,tarea)=>{
+        this.setState({tarea:tarea})
         this.props.toggleRight(provid,render)
         this.props.tareadetalles(tarea)
         this.props.UpdateShow('show')
@@ -46,7 +59,7 @@ class lista extends Component {
                                             </div>
                                             <div className="col-11 textTarea"  onClick={()=>this.toggleRight(tarea.titulo,1,tarea)}>
                                                 <span>{tarea.titulo}</span>
-                                                <span className="fecha-tarea float-right">{(tarea.fecha)}</span>
+                                                <span className="fecha-tarea float-right">{moment(tarea.fecha).format('DD/MM/YYYY')}</span>
                                             </div>
                                         </div>
                                     </div>

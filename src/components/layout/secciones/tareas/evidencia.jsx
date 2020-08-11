@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import firebase from 'firebase'
+import moment from "moment";
 
 class evidencia extends Component {
     constructor(props){
@@ -10,13 +11,21 @@ class evidencia extends Component {
         }
     }
     finaliarTarea(){
+            const historial=[]
             firebase.database().ref('tareas/'+this.props.tarea.key+'/responsables').once("value").then((snapshot)=>{
-                var tareaRemove = document.getElementById(this.props.tarea.key);
-                tareaRemove.parentNode.removeChild(tareaRemove);
                 firebase.database().ref('tareas/'+this.props.tarea.key+'/responsables/'+snapshot.val().findIndex(responsable => responsable.referencia === this.props.usuario.referencia)).update({estatustarea:'realizada'})
+                historial.push(
+                    {
+                        photoURL:this.props.usuario.photoURL,
+                        displayname:this.props.usuario.displayname,
+                        texto:'termino la tarea',
+                        fecha:moment().format('YYYY-MM-DD')
+                    }
+                )
+                firebase.database().ref('tareas/'+this.props.tarea.key).update({historial:historial})
             }
-            )
-            
+        )
+        document.getElementById('wrapper-Container').classList.toggle('toggled')
             
     }
     render() {
@@ -30,7 +39,6 @@ class evidencia extends Component {
 }
 const mapStateProps = state =>({
     usuario:state.info,
-    infoUsuario: state.info,
 })
 const mapDispatchToprops = dispatch =>({
     UpdateShow(show){

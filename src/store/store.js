@@ -61,9 +61,11 @@ const reducerMenu=(state =  initialState,action)=>{
         case 'Tareas':
             return({...state,Tareas:state.Tareas.concat(action.tarea)})
         case 'UpdateTareas':
-            return({...state,Tareas:action.UpdateTareas})
+            return({...state,Tareas:(action.UpdateTareas)})
         case 'TareasAsignadas':
             return({...state,tareasAsignadas:state.tareasAsignadas.concat(action.tareaasignada)})
+        case 'TareasAsignadasUpdate':
+            return({...state,tareasAsignadas:(action.tareaasignadaUpdate)})
         case 'Tarea':
             return({...state,tareadetalles:(action.tareadetalles)})
         case 'Evidencia':

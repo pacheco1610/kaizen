@@ -11,7 +11,7 @@ class AuthContext extends Component {
             isLogin:false,
             menu:[],
             clientes:this.props.clientes,
-            tareas:[]
+            tareas:[],
         }
     }
     componentDidMount=()=>{
@@ -86,34 +86,51 @@ class AuthContext extends Component {
                                             fecha:snap.val().fecha,
                                             fechaCreada:snap.val().fechaCreada,
                                             responsables:snap.val().responsables,
-                                            titulo:snap.val().titulo
+                                            titulo:snap.val().titulo,
+                                            historial:snap.val().historial
                                         })
                                         }}
                                     )
+
                             })
                             firebase.database().ref('tareas').orderByChild('empresa').equalTo(snapshot.val().empresa).on('child_changed',snap=>{
+                                let comprobar=0
                                 snap.val().responsables.map(responsable =>
-                                    {if(responsable.referencia===snapshot.val().referencia&&responsable.estatustarea==='realizada'){
-                                        let tareasFilter=this.props.TareasUpdate.filter(item => item.key!=snap.key)
-                                        tareasFilter.push({
-                                            key:snap.key,
-                                            asignador:snap.val().asignador,
-                                            descripcion:snap.val().descripcion,
-                                            empresa:snap.val().empresa,
-                                            estatustarea:snap.val().estatustarea,
-                                            estatus:snap.val().estatus,
-                                            fecha:snap.val().fecha,
-                                            fechaCreada:snap.val().fechaCreada,
-                                            responsables:snap.val().responsables,
-                                            itulo:snap.val().titulo
-                                        })
-                                        this.props.UpdateTareas(tareasFilter)
+                                    {
+                                    if(responsable.referencia===snapshot.val().referencia&&responsable.estatustarea==='realizada'){
+                                        comprobar=comprobar+1  
                                     }
                                 })
-                             
+
+
+                                if (comprobar==1) {
+                                    let tareasFilter=this.props.TareasUpdate.filter(item => item.key!==snap.key)
+                                    this.props.UpdateTareas(tareasFilter)
+                                    document.getElementById('wrapper-Container').classList.toggle('toggled')
+                                }else{
+                                    if (snap.val().asignador.referencia!==snapshot.val().referencia) {
+                                    let tareasFilter=this.props.TareasUpdate.filter(item=>item.key!==snap.key)
+                                    tareasFilter.push({
+                                        key:snap.key,
+                                        asignador:snap.val().asignador,
+                                        descripcion:snap.val().descripcion,
+                                        empresa:snap.val().empresa,
+                                        estatustarea:snap.val().estatustarea,
+                                        estatus:snap.val().estatus,
+                                        fecha:snap.val().fecha,
+                                        fechaCreada:snap.val().fechaCreada,
+                                        responsables:snap.val().responsables,
+                                        titulo:snap.val().titulo,
+                                        historial:snap.val().historial
+                                    })
+                                    this.props.UpdateTareas(tareasFilter)    
+                                    }
+                                     
+                                }
+                       
                         })
                          /*--------------------------Tareas Asignadas---------------------*/
-                         firebase.database().ref('tareas').orderByChild('empresa').equalTo(snapshot.val().empresa).on('child_added',snap=>{
+                         firebase.database().ref('tareas').orderByChild('asignador/referencia').equalTo(snapshot.val().referencia).on('child_added',snap=>{
                             let comprobar=0;
                             snap.val().responsables.map(responsable =>
                                 {
@@ -132,8 +149,36 @@ class AuthContext extends Component {
                                     fecha:snap.val().fecha,
                                     fechaCreada:snap.val().fechaCreada,
                                     responsables:snap.val().responsables,
-                                    titulo:snap.val().titulo
+                                    titulo:snap.val().titulo,
+                                    historial:snap.val().historial
                                 })
+                            }
+                        })
+                        firebase.database().ref('tareas').orderByChild('asignador/referencia').equalTo(snapshot.val().empresa).on('child_changed',snap=>{
+                            let comprobar=0;
+                            snap.val().responsables.map(responsable =>
+                                {
+                                    if(responsable.referencia===snapshot.val().referencia) {
+                                        comprobar=comprobar+1;
+                                    }
+                                })
+                            if (comprobar===0&&snap.val().asignador.referencia===snapshot.val().referencia) {
+                                let tareasFilter=this.props.tareasAsignadas.filter(item=>item.key!==snap.key)
+                                    tareasFilter.push({
+                                        key:snap.key,
+                                        asignador:snap.val().asignador,
+                                        descripcion:snap.val().descripcion,
+                                        empresa:snap.val().empresa,
+                                        estatustarea:snap.val().estatustarea,
+                                        estatus:snap.val().estatus,
+                                        fecha:snap.val().fecha,
+                                        fechaCreada:snap.val().fechaCreada,
+                                        responsables:snap.val().responsables,
+                                        titulo:snap.val().titulo,
+                                        historial:snap.val().historial
+                                    })
+                                    this.props.TareasAsignadasUpdate(tareasFilter)
+                                    
                             }
                         })
                     /*-------------------------------MENU--------------------------------------- */
@@ -162,7 +207,8 @@ const mapStateProps = state =>({
     usuario: state.usuario,
     clientes: state.clientes,
     colaboradoresInfo:state.colaboradores,
-    TareasUpdate:state.Tareas
+    TareasUpdate:state.Tareas,
+    tareasAsignadas:state.tareasAsignadas
 })
 
 const mapDispatchToprops = dispatch =>({
@@ -242,6 +288,12 @@ const mapDispatchToprops = dispatch =>({
         dispatch({
             type:'UpdateTareas',
             UpdateTareas
+        })
+    },
+    TareasAsignadasUpdate(tareaasignadaUpdate){
+        dispatch({
+            type:'TareasAsignadasUpdate',
+            tareaasignadaUpdate
         })
     }
 })

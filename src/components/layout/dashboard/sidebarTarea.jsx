@@ -16,6 +16,18 @@ class sidebarTareas extends Component {
         this.props.toggleClose()
         this.props.UpdateShow(show)
     }
+    renerHistorial(){
+       if(this.props.tarea.historial) {
+           return(
+            this.props.tarea.historial.map(historia=>
+                <div className="col-12 col-md-12 col-xl-12  mb-2">
+                    <img src={historia.photoURL} alt="..." className="img-colaborador rounded-circle img-thumbnail mr-2" />
+                        <span className="title-tarea mr-2">{historia.displayname} {historia.texto} {moment(historia.fecha).format('DD/MM/YYYY')}</span>
+                </div>
+            )
+           )
+        }
+    }
     render() {
         return (
             <div id="sidebar-right">
@@ -44,6 +56,7 @@ class sidebarTareas extends Component {
                                 <div className="bg-fotter">
                                     <div className="row">
                                         <div className="container mt-2">
+                                            {this.renerHistorial()}
                                             <div className="col-12 col-md-12 col-xl-12 mb-2">
                                                 <img src={this.props.tarea.asignador.photoURL} alt="..." className="img-colaborador rounded-circle img-thumbnail mr-2" />
                                                 <span className="title-tarea mr-2">{this.props.tarea.asignador.displayname} te la asignó.</span>
