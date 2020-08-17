@@ -510,3 +510,6 @@ input[type=text]{
 .badgestareas{
   font-size: .9rem;
 }
+.btn-colaboradores:hover{
+  background-color: #eee;
+}

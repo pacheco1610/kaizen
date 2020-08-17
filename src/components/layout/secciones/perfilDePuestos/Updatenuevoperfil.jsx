@@ -158,13 +158,16 @@ class Updatenuevoperfil extends Component {
                         <button id="agregarGeneral" onClick={()=>this.addResponsabilidad('general')} className="btn btn-outline-secondary btn-general remove " type="button"><i className="fas fa-plus-square"></i> Agregar</button>
                     </div>
                 </div>
+                {this.state.responsabilidades?
                 <div className="row">
-                    {this.state.responsabilidades.filter(item=>item.tipo=='general').map(responsabilidad=>
-                        <button type="button" onClick={()=>this.removeResponsabilidad(responsabilidad.key)} key={responsabilidad.key} className="col-12 btn btn-block btn-light text-left mr-2 mb-2">
-                         <span className="badge badge-light float-right">x</span> {responsabilidad.responsabilidad}
-                        </button>  
-                    )}
+                {this.state.responsabilidades.filter(item=>item.tipo=='general').map(responsabilidad=>
+                    <button type="button" onClick={()=>this.removeResponsabilidad(responsabilidad.key)} key={responsabilidad.key} className="col-12 btn btn-block btn-light text-left mr-2 mb-2">
+                     <span className="badge badge-light float-right">x</span> {responsabilidad.responsabilidad}
+                    </button>  
+                )}
                 </div>
+                :null}
+          
             </div>
             <div className="col-12 col-xl-12 col-md-12 mt-2">
                 <label className="title-dashboard">Responsabilidades Diaria</label>
@@ -174,13 +177,16 @@ class Updatenuevoperfil extends Component {
                         <button id="agregardiaria" onClick={()=>this.addResponsabilidad('diaria')} className="btn btn-outline-secondary btn-general remove " type="button"><i className="fas fa-plus-square"></i> Agregar</button>
                     </div>
                 </div>
+               {this.state.responsabilidades?
                 <div className="row">
-                    {this.state.responsabilidades.filter(item=>item.tipo=='diaria').map(responsabilidad=>
-                        <button type="button" onClick={()=>this.removeResponsabilidad(responsabilidad.key)} key={responsabilidad.key} className="col-12  text-left btn btn-block btn-light mr-2 mb-2">
-                            <span className="badge badge-light float-right">x</span> {responsabilidad.responsabilidad}
-                        </button>  
-                    )}
-                </div>
+                {this.state.responsabilidades.filter(item=>item.tipo=='diaria').map(responsabilidad=>
+                    <button type="button" onClick={()=>this.removeResponsabilidad(responsabilidad.key)} key={responsabilidad.key} className="col-12  text-left btn btn-block btn-light mr-2 mb-2">
+                        <span className="badge badge-light float-right">x</span> {responsabilidad.responsabilidad}
+                    </button>  
+                )}
+                    </div>:null
+               } 
+               
             </div>
             <div className="col-12 col-xl-12 col-md-12 mt-2">
                 <label className="title-dashboard">Responsabilidades Semanales</label>
@@ -190,13 +196,14 @@ class Updatenuevoperfil extends Component {
                         <button id="agregarsemanal" onClick={()=>this.addResponsabilidad('semanal')} className="btn btn-outline-secondary btn-general remove " type="button"><i className="fas fa-plus-square"></i> Agregar</button>
                     </div>
                 </div>
+                {this.state.responsabilidades?
                 <div className="row">
                     {this.state.responsabilidades.filter(item=>item.tipo=='semanal').map(responsabilidad=>
                         <button type="button" onClick={()=>this.removeResponsabilidad(responsabilidad.key)} key={responsabilidad.key} className="col-12  text-left btn btn-block btn-light mr-2 mb-2">
                             <span className="badge badge-light float-right">x</span> {responsabilidad.responsabilidad}
                         </button>  
                     )}
-                </div>
+                </div>:null}
             </div>
             <div className="col-12 col-xl-12 col-md-12 mt-2">
                 <label className="title-dashboard">Responsabilidades Quincenal</label>
@@ -206,6 +213,7 @@ class Updatenuevoperfil extends Component {
                         <button id="agregarquincenal" onClick={()=>this.addResponsabilidad('quincenal')} className="btn btn-outline-secondary btn-general remove " type="button"><i className="fas fa-plus-square"></i> Agregar</button>
                     </div>
                 </div>
+                {this.state.responsabilidades?
                 <div className="row">
                     {this.state.responsabilidades.filter(item=>item.tipo=='quincenal').map(responsabilidad=>
                         <button type="button" onClick={()=>this.removeResponsabilidad(responsabilidad.key)} key={responsabilidad.key} className="col-12  text-left btn btn-block btn-light mr-2 mb-2">
@@ -213,6 +221,7 @@ class Updatenuevoperfil extends Component {
                         </button>  
                     )}
                 </div>
+                :null}
             </div>
             <div className="col-12 col-xl-12 col-md-12 mt-2">
                 <label  className="title-dashboard">Responsabilidades Mensual</label>
@@ -222,6 +231,7 @@ class Updatenuevoperfil extends Component {
                         <button id="agregarmensual" onClick={()=>this.addResponsabilidad('mensual')} className="btn btn-outline-secondary btn-general remove " type="button"><i className="fas fa-plus-square"></i> Agregar</button>
                     </div>
                 </div>
+                {this.state.responsabilidades?
                 <div className="row">
                     {this.state.responsabilidades.filter(item=>item.tipo=='mensual').map(responsabilidad=>
                         <button type="button" onClick={()=>this.removeResponsabilidad(responsabilidad.key)} key={responsabilidad.key} className="col-12  text-left btn btn-block btn-light mr-2 mb-2">
@@ -229,6 +239,7 @@ class Updatenuevoperfil extends Component {
                         </button>  
                     )}
                 </div>
+                :null}
             </div>
             <div className="col-12 text-center mt-4 border-bottom">
                 <label className="title-dashboard">Requerimientos del puesto / Experiencia laboral</label>
