@@ -21,7 +21,7 @@ class nuevousuario extends Component {
     }
     handleChangeSelect = ()  => {
         let select = document.getElementById('selectmenu');
-        if (select.value!=0) {
+        if (select.value!==0) {
             this.setState({selectedOption:select.value})
         }
         else{
@@ -32,12 +32,12 @@ class nuevousuario extends Component {
         let inputs = document.getElementsByClassName('form-control')
         let verificar=0
         for (let index = 0; index < inputs.length; index++) {
-                if(inputs[index].value!=""){
+                if(inputs[index].value!==""){
                     verificar=verificar+1
                 }
                 
         }
-        if (verificar==inputs.length) {
+        if (verificar===inputs.length) {
             const params={
                 nombre:this.state.nombre,
                 apellido:this.state.apellido,
@@ -46,17 +46,27 @@ class nuevousuario extends Component {
                 empresa:this.state.empresa,
                 email:this.state.email,
                 telefono:this.state.telefono,
-                tcliente:this.state.selectedOption,
+                tcliente:this.props.tcliente,
                 fecha:firebase.database.ServerValue.TIMESTAMP,
                 fuente:this.state.fuente,
                 idempresa:this.props.infoUsuario.empresa
             }
             if(firebase.database().ref('clientes').push(params)){
+                this.setState({
+                    nombre:'',
+                    apellido:'',
+                    empresa:'',
+                    rubro:'',
+                    email:'',
+                    telefono:'',
+                    fecha:'',
+                    fuente:'',
+                })
                 this.notifyTopCenter('success','Cliente Agregado')
             }
         }
         else{
-            this.notifyTopCenter('warning',<button onClick={()=>alert('funciona ajua')}>Hola</button>)
+            this.notifyTopCenter('warning','Rellena todos los campos')
         }
     }
     notifyTopCenter = (type,text) =>
@@ -67,19 +77,6 @@ class nuevousuario extends Component {
         return (
             <div className="container">
                 <ToastContainer />
-                    <div className="row pt-3">
-                        <div className="col-12">
-                        <select className="custom-select" onChange={this.handleChangeSelect} id="selectmenu">
-                            <option value='0'>Selecciona el tipo de cliente</option>
-                            <option value="sp">Prospecto</option>
-                            <option value="p">Contactado</option>
-                            <option value="c">Cliente Activo</option>
-                            <option value="cs">Cliente Satisfecho</option>
-                        </select>
-                        <hr/>
-                        </div>
-                    </div>
-                    {this.state.selectedOption !== null &&
                     <React.Fragment>
                         <div className="row">
                             <div className="col-12">
@@ -143,7 +140,6 @@ class nuevousuario extends Component {
                             </div>
                         </div>
                     </React.Fragment>
-                    }
             </div>
         )
     }

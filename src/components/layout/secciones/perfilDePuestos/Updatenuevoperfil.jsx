@@ -37,7 +37,7 @@ class Updatenuevoperfil extends Component {
 
     addResponsabilidad(tipo){
         const {responsabilidades}=this.state
-        if (this.state[tipo]!="") {
+        if (this.state[tipo]!=="") {
             responsabilidades.push({
                 key:this.state.responsabilidades.length,
                 responsabilidad:this.state[tipo],
@@ -47,7 +47,7 @@ class Updatenuevoperfil extends Component {
         }
     }
     removeResponsabilidad(responsabilidad){
-        this.setState({responsabilidades:this.state.responsabilidades.filter(item=>item.key != responsabilidad)})
+        this.setState({responsabilidades:this.state.responsabilidades.filter(item=>item.key !== responsabilidad)})
     }
     check(habilidad){
         const {habilidades}=this.state
@@ -58,7 +58,7 @@ class Updatenuevoperfil extends Component {
            })
         }
         else{
-            this.setState({habilidades:this.state.habilidades.filter(item=>item.key!=habilidad.key)})
+            this.setState({habilidades:this.state.habilidades.filter(item=>item.key!==habilidad.key)})
         }
     }
     onChange(event,id){
@@ -68,7 +68,7 @@ class Updatenuevoperfil extends Component {
         let inputs =document.getElementsByClassName('requerid')
         let verificar=0
         for (let index = 0; index < inputs.length; index++) {
-            if(inputs[index].value!=""){
+            if(inputs[index].value!==""){
                 verificar=verificar+1
             }
         }

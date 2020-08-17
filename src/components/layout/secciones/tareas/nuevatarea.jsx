@@ -22,7 +22,7 @@ class nuevatarea extends Component {
    }
 
    DropdownColaboradorOut(){
-       if (this.state.text=='') {
+       if (this.state.text==='') {
         document.querySelector('.dropdownCol').classList.add('toggle')
        }
    }
@@ -45,7 +45,7 @@ class nuevatarea extends Component {
       })
    }
    removeResponsable(referencia){
-    this.setState({responsables:this.state.responsables.filter(item=>item.referencia!=referencia)})
+    this.setState({responsables:this.state.responsables.filter(item=>item.referencia!==referencia)})
    }
    addResponsable(responsable){
        const {responsables}=this.state
@@ -127,7 +127,7 @@ class nuevatarea extends Component {
                                          <TimeInput
                                             value={this.state.time}
                                             onChange={value => {
-                                                this.setState(state => ({ time: value }));
+                                                this.setState({ time: value });
                                             }}
                                             style={{ top: 8,bottom:8}}
                                         />

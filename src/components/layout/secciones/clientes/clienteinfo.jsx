@@ -59,10 +59,10 @@ class clienteinfo extends Component {
         document.getElementById('guardar').removeAttribute('disabled')
     }
     handleUpdate(){
-        let inputs =document.getElementsByTagName('input')
+        let inputs =document.getElementsByClassName('input-edit')
         let verificar=0
         for (let index = 0; index < inputs.length; index++) {
-            if(inputs[index].value!=""){
+            if(inputs[index].value!==""){
                 verificar=verificar+1
             }
         }

@@ -183,13 +183,7 @@ class AuthContext extends Component {
                         })
                     /*-------------------------------MENU--------------------------------------- */
                     firebase.database().ref('usuarios/'+userId+'/permisos').on('child_added',snap=>{
-                        const {menu}=this.state
-                        menu.push({
-                            icono:snap.val().icono,
-                            titulo:snap.val().titulo,
-                            key:snap.val().key
-                        })
-                        this.props.UpdateMenu(menu)
+                        this.props.UpdateMenu(snap.val())
                     })
                 }
             });

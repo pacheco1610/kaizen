@@ -4,6 +4,10 @@ export default class bienvenida extends Component {
     toggledView=(view)=>{
         this.props.toggledView(view)
     }
+    sigOut(){
+        firebase.auth().signOut()
+        window.location="/";
+    }
     render() {
         return (
             <div className='wrapper-bienvenida'>
@@ -18,7 +22,7 @@ export default class bienvenida extends Component {
                         <button className="btn btn-general btn-block col-xl-4 col-md-6"  onClick={()=>this.toggledView(2)}>Colaborador</button>
                     </div>
                     <div className="d-flex mr-auto mt-2">
-                        <button className="btn btn-general ml-auto" onClick={()=>firebase.auth().signOut()}>Cancelar</button>
+                        <button className="btn btn-general ml-auto" onClick={()=>this.sigOut()}>Cancelar</button>
                     </div>
                 </div>
             </div>

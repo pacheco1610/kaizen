@@ -21,7 +21,7 @@ class empresa extends Component {
             rubro:this.state.rubro,
             referencia:firebase.auth().currentUser.uid
         }
-        if (paramsempresa.nombre!=''&&paramsempresa.rubro!='') {
+        if (paramsempresa.nombre!==''&&paramsempresa.rubro!=='') {
             if (this.ref.child('empresas').push(paramsempresa)) {
                 const paramsUsuario={
                         displayname:this.props.usuario.displayName,
@@ -30,33 +30,37 @@ class empresa extends Component {
                         estatus:'true',
                         referencia:firebase.auth().currentUser.uid,
                         puesto:{
-                            titulo:'Dueño'
+                            Puesto:'Dueño'
                         },
                         permisos:{
                             0:{
                                 titulo:'Tareas',
                                 icono:'fas fa-calendar-check',
-                                key:1
+                                key:1,
+                                direccion:'/'
                             },
                             2:{
                                 titulo:'Clientes',
                                 icono:'fas fa-user-tag',
-                                key:2
+                                key:2,
+                                direccion:'/clientes'
                             },
                             3:{
                                 titulo:'Colaboradores',
                                 icono:'fas fa-user-friends',
-                                key:3
+                                key:3,
+                                direccion:'/colaboradores'
                             },
                             4:{
                                 titulo:'Perfil de Puestos',
                                 icono:'fas fa-clipboard-list',
-                                key:4
+                                key:4,
+                                direccion:'/perfildepuestos'
                             }
                         }
                 }
                 if ( this.ref.child('usuarios').child(firebase.auth().currentUser.uid).set(paramsUsuario)) {
-                    window.location.reload(); 
+                    window.location="/";
                 }
             }
             else{

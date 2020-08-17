@@ -22,7 +22,7 @@ class login extends Component {
     render() {
         let google = new firebase.auth.GoogleAuthProvider()
         let facebook = new firebase.auth.FacebookAuthProvider();
-        if (this.props.usuario==null) {
+        if (!firebase.auth().currentUser) {
             return (
                 <React.Fragment>
                     <div className="shape-container">

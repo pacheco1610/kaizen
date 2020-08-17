@@ -36,7 +36,15 @@ export default class perfil extends Component {
                 break;
         }
     }
-
+    componentDidMount(){
+        let elements = document.getElementsByClassName('col-12')
+        for (let index = 0; index < elements.length; index++) {
+            elements[index].classList.remove('activo')
+        }
+        if ( document.getElementById('4')) {
+            document.getElementById('4').classList.add('activo')   
+        }
+    }
     render() {
         return (
             <div className="d-flex" id="wrapper-Container">

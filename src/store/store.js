@@ -2,7 +2,6 @@ import {createStore} from 'redux'
 
 
 const initialState = {
-    menuview:1,
     menu:[],
     usuario:[],
     clientes:[],
@@ -24,11 +23,8 @@ const initialState = {
 
 const reducerMenu=(state =  initialState,action)=>{
     switch (action.type) {
-        case 'CAMBIAR_MENU':
-            return {...state,
-                menuview:action.render};
         case 'MENU':
-                return ({...state,menu:action.menu});
+                return ({...state,menu:state.menu.concat(action.menu)});
         case 'usuario':
             return ({...state,
                 usuario:action.usuario});

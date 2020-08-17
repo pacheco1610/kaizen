@@ -4,7 +4,6 @@ import SidebarRight from '../../dashboard/sidebarRight'
 import Modal from '../../../modals/modal'
 import TabColaborador from './tabcolaboradores'
 import NuevoColaborador from './nuevocolaborador'
-import NuevoPuesto from './nuevopuesto'
 import InfoColaborador from './infocolaborador'
 
 export default class colaboradores extends Component {
@@ -37,12 +36,19 @@ export default class colaboradores extends Component {
         switch (this.state.renderView) {
             case 0:
                 return(<NuevoColaborador/>)
-            case 1:
-                return(<NuevoPuesto/>)
             case 3:
                 return(<InfoColaborador/>)
             default:
                 break;
+        }
+    }
+    componentDidMount(){
+        let elements = document.getElementsByClassName('col-12')
+        for (let index = 0; index < elements.length; index++) {
+            elements[index].classList.remove('activo')
+        }
+        if ( document.getElementById('3')) {
+            document.getElementById('3').classList.add('activo')   
         }
     }
     render() {

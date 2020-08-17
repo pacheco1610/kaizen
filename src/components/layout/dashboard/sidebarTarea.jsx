@@ -37,7 +37,7 @@ class sidebarTareas extends Component {
                             <div className="bg-white rounded shadow mt-2">
                                 <div className="container p-4">
                                     <nav className="navbar navbar-expand-lg">
-                                        {this.props.tarea!=''? <h2>{this.props.tarea.titulo}</h2>:<h4 className="title-dashboard">{this.props.titulo}</h4>}
+                                        {this.props.tarea!==''? <h2>{this.props.tarea.titulo}</h2>:<h4 className="title-dashboard">{this.props.titulo}</h4>}
                                         <ul className="navbar-nav ml-auto">
                                             <button onClick={()=>this.toggleClose('show')} className="nav-item btn"><h4 className="title-dashboard">X</h4></button>
                                         </ul>

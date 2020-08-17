@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import { Redirect} from 'react-router-dom';
+import firebase from 'firebase'
 
 import Sidebar from './dashboard/sidebar'
-import Container from './dashboard/container'
+import Navbar from './dashboard/navbar'
+import Login from './login/login'
 import Cargando from './cargador/cargando'
 import Bienvenido from './nuevousuario/bienvenido'
 
@@ -11,44 +12,58 @@ class Dashboard extends Component {
     constructor(props){
         super(props)
         this.state={
-            precargado:0
+            precargado:false
+        }
+    }
+    toggle=()=>{
+        if (window.screen.width >= 1024){
+            document.getElementById('wrapper').classList.toggle('toggled')
+        }
+        else{
+            alert('Mobil')
         }
     }
     componentDidMount(){
-        setTimeout(()=>this.setState({precargado:1}), 2000);
+        setTimeout(()=>this.setState({precargado:true}), 3000);
         
     }
     render() {
-        if (this.props.usuario!=null) {
-            if (this.state.precargado==1) {
-                if (this.props.info.registrado==false&&this.state.precargado==1) {
-                    return(<Bienvenido/>)
-                }
-                else{
-                    return (
+        if (this.state.precargado!==false&&this.props.usuario!==[]) {
+           
+            if (firebase.auth().currentUser) {
+                if (this.props.usuario.registrado===false) {
+                 return(<Bienvenido/>)
+                }else{
+                    
+                    return(
                         <div className="d-flex" id="wrapper">
                             <Sidebar/>
-                            <Container/>
+                            <div id="page-content-wrapper">
+                                <Navbar toggle={this.toggle}/>
+                                <div className="container-fluid">
+                                    {this.props.children}
+                                </div>
+                            </div>
                         </div>
                     )
                 }
-            }
-            else{
+            }else{
                 return(
-                    <Cargando/>
+                <Login/>
                 )
             }
-        }
-        else{
+        }else{
             return(
-                <Redirect to="/login"/>
+            <Cargando/>
             )
         }
+       
+        
     }
 }
 
 const mapStateProps = state =>({
-    usuario: state.usuario,
+    usuario: state.info,
     info:state.info,
 })
 

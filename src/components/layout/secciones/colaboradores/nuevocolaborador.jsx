@@ -8,42 +8,48 @@ class nuevocolaborador extends Component {
     constructor(props){
         super(props)
         this.state={
-            perProps:this.props.permisos,
             permisos:[
                 {
                 icono:"fas fa-calendar-check",
                 key:1,
-                titulo:'Tareas'}
+                titulo:'Tareas',
+                direccion:'/'
+                }
             ],
             puesto:'',
             referencia:'',
-            nombre:''
+            nombre:'',
+            celular:''
         }
     }
-    handlePermiso(permiso){
-        const {permisos}=this.state
-        permisos.push({
-            titulo:permiso.titulo,
-            icono:permiso.icono,
-            key:permiso.key
-        })
-        this.setState({perProps:this.state.perProps.filter(item=> item.key != permiso.key)})
-        this.setState({permisos:permisos})
+    handlePermiso(){
+        let selectPer = document.getElementById('selectPermisos');
+        if (selectPer.value!=='0') {
+            document.getElementById(selectPer.value).disabled=true
+            let permiso = this.props.permisos.filter(permiso=>permiso.direccion===selectPer.value)
+            const {permisos} = this.state
+            permisos.push(permiso[0])
+            this.setState({permisos:permisos})
+        }
+        else{
+            this.setState({selectedOption:null})
+        }
     }
     removePermiso(permiso){
-        const {perProps}=this.state
-        perProps.push({
-            titulo:permiso.titulo,
-            icono:permiso.icono,
-            key:permiso.key,
-        })
-        this.setState({permisos:this.state.permisos.filter(item => item.key != permiso.key)})
+        const {permisos}=this.state
+        if (permiso.direccion!=='/') {
+            document.getElementById(permiso.direccion).disabled=false
+            let filtropermisos = permisos.filter(permisofil=>permisofil.direccion!==permiso.direccion)
+            this.setState({permisos:filtropermisos})
+        }
+       
     }
 
     handleChangeSelect = ()  => {
         let select = document.getElementById('selectmenu');
-        if (select.value!=0) {
+        if (select.value!==0) {
             let puesto = this.props.puestos.filter(item=>item.key==select.value)
+            
             this.setState({puesto:puesto[0]})
         }
         else{
@@ -63,15 +69,26 @@ class nuevocolaborador extends Component {
         }
         
         if(firebase.database().ref('usuarios').push(params)){
-            this.setState({selectedOption:'',nombre:'',perProps:this.state.perProps.concat(this.state.permisos.filter(item=>item.key!=1)),permisos:[]})
+            let elemetDisabled = document.getElementsByClassName('optionPermisos')
+            for (let index = 0; index < elemetDisabled.length; index++) {
+                elemetDisabled[index].disabled=false
+            }
+            this.setState({selectedOption:'',
+            nombre:'',
+            permisos:[
+                {
+                icono:"fas fa-calendar-check",
+                key:1,
+                titulo:'Tareas',
+                direccion:'/'
+                }
+            ]})
             this.notifyTopCenter()
         }
         this.setState({referencia:params.referencia})
-        
-
     }
     notifyTopCenter = () =>
-    toast.success("Puesto Agregado", {
+    toast.success("Colaborador agregado correctamente", {
         position: toast.POSITION.TOP_CENTER
     })
     render() {
@@ -94,15 +111,26 @@ class nuevocolaborador extends Component {
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="col-12 col-xl-6 mb-xl-0 mb-md-2 mb-2">
-                                    {this.state.perProps.map(permiso=>
-                                        <span key={permiso.key} className="badge badge-pill badge-secondary mr-2 perm-badge" onClick={()=>this.handlePermiso(permiso)}>{permiso.titulo}</span>
+                                <select className="custom-select col-12 mb-2" id="selectPermisos" onChange={()=>this.handlePermiso()}>
+                                    <option value='0'>Agregar Permisos</option>
+                                    {this.props.permisos.map(permiso=>
+                                        <option className="optionPermisos" key={permiso.key} id={permiso.direccion} value={permiso.direccion}>{permiso.titulo}</option>
                                     )}
-                                </div>
-                                <div className="col-12 col-xl-6 border rounded-sm perm-box">
-                                    {this.state.permisos.map(permiso=>
-                                        <span key={permiso.key} className="badge badge-pill badge-primary mr-2 perm-badge" onClick={()=>this.removePermiso(permiso)}>{permiso.titulo} x</span>
-                                    )}
+                                </select>
+                                
+                                <div className="col-12">
+                                    <div className="row">
+                                        {this.state.permisos.map(permiso=>
+                                            <div className="col-12 p-2 bg-check rounded mb-2">
+                                                <div className="row align-items-center badgestareas">
+                                                    <div className="col-12 text-left">
+                                                        <button onClick={()=>this.removePermiso(permiso)} className="btn text-white"><i className="fas fa-minus-circle"></i></button>
+                                                        Tiene permisos de {permiso.titulo}
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>

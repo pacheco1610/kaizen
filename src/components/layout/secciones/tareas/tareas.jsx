@@ -46,11 +46,15 @@ class tareas extends Component {
         }
     }
     componentDidMount(){
-    if (document.getElementById('1')) {
-        document.getElementById('1').classList.add('activo')
+        let elements = document.getElementsByClassName('col-12')
+        for (let index = 0; index < elements.length; index++) {
+            elements[index].classList.remove('activo')
+        }
+        if ( document.getElementById('1')) {
+            document.getElementById('1').classList.add('activo')   
+        }
     }
-       
-    }
+      
     render() {
         return (
             <div className="d-flex" id="wrapper-Container">

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import firebase from 'firebase'
 import { ToastContainer, toast } from 'react-toastify';
 
 class infocolaborador extends Component {
@@ -38,14 +37,14 @@ class infocolaborador extends Component {
     removePermiso(permiso){
         let verificar=0
         for (let index = 0; index < this.state.perProps.length; index++) {
-            if (this.state.perProps[index].key != permiso.key) {
+            if (this.state.perProps[index].key !== permiso.key) {
                 verificar=verificar+0
             }
             else{
                 verificar=verificar+1
             }
         }
-        if (verificar==0) {
+        if (verificar===0) {
             const {perProps}=this.state
             perProps.push({
                 titulo:permiso.titulo,
@@ -54,27 +53,27 @@ class infocolaborador extends Component {
             })
         }
         
-        this.setState({permisos:this.state.permisos.filter(item => item.key != permiso.key)})
+        this.setState({permisos:this.state.permisos.filter(item => item.key !== permiso.key)})
         document.getElementById('guardar').removeAttribute('disabled')
     }
     handlePermiso(permiso){
         let verificar=0
         for (let index = 0; index < this.state.permisos.length; index++) {
-            if (this.state.permisos[index].key != permiso.key) {
+            if (this.state.permisos[index].key !== permiso.key) {
                 verificar=verificar+0
             }
             else{
                 verificar=verificar+1
             }
         }
-        if (verificar==0) {
+        if (verificar===0) {
         const {permisos}=this.state
         permisos.push({
             titulo:permiso.titulo,
             icono:permiso.icono,
             key:permiso.key
         })
-        this.setState({perProps:this.state.perProps.filter(item=> item.key != permiso.key)})
+        this.setState({perProps:this.state.perProps.filter(item=> item.key !== permiso.key)})
         this.setState({permisos:permisos})
         document.getElementById('guardar').removeAttribute('disabled')
         }
@@ -119,7 +118,7 @@ class infocolaborador extends Component {
                             )}
                         </div>
                         <div className="col-12 col-xl-6 border rounded-sm perm-box">
-                            {this.state.permisos.filter(permiso=>permiso.key!=1).map(permiso=>
+                            {this.state.permisos.filter(permiso=>permiso.key!==1).map(permiso=>
                                 <span key={permiso.key} className="badge badge-pill badge-primary mr-2 perm-badge" onClick={()=>this.removePermiso(permiso)}>{permiso.titulo} x</span>
                             )}
                         </div>

@@ -10,7 +10,7 @@ class lista extends Component {
         }
     }
     componentDidUpdate(prevprop){
-        if (this.props.tareas != prevprop.tareas) {
+        if (this.props.tareas !== prevprop.tareas) {
             this.props.tareas.map(tarea=>{
                     if (tarea.key===this.state.tarea.key) {
                         this.props.tareadetalles(tarea)
@@ -18,7 +18,7 @@ class lista extends Component {
             }
             )
         }
-        if (this.props.tareasAsignadas != prevprop.tareasAsignadas) {
+        if (this.props.tareasAsignadas !== prevprop.tareasAsignadas) {
             this.props.tareasAsignadas.map(tarea=>{
                     if (tarea.key===this.state.tarea.key) {
                         this.props.tareadetalles(tarea)
@@ -52,7 +52,7 @@ class lista extends Component {
                         <div id="conTusTareas" className="container">
                             <div className="row">
                                 {this.props.tareas.map(tarea=>
-                                    <div className="col-12 rounded btn-row-check" id={tarea.key}>
+                                    <div className="col-12 rounded btn-row-check" id={tarea.key} key={tarea.key}>
                                         <div className="row align-items-center">
                                             <div className="col-1 listtarea">
                                                 <button className="btn btn-check"><i className="far fa-check-circle"></i></button>
@@ -72,7 +72,7 @@ class lista extends Component {
                         <div  id="conTareasAsignadas" className="container">
                                     <div className="row">
                                     {this.props.tareasAsignadas.map(tarea=>
-                                <div className="col-12 rounded btn-row-check">
+                                    <div className="col-12 rounded btn-row-check" key={tarea.key}>
                                     <div className="row align-items-center">
                                         <div className="col-1 listtarea">
                                             <button className="btn btn-check"><i className="far fa-check-circle"></i></button>

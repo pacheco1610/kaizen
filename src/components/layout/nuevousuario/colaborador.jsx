@@ -36,7 +36,7 @@ class colaborador extends Component {
                         permisos:this.state.usuarioRef.permisos
                 }
                 if (firebase.database().ref('usuarios').child(firebase.auth().currentUser.uid).set(paramsUsuario)) {
-                    window.location.reload(); 
+                    window.location="/"; 
                 }
                 }
                 
@@ -59,7 +59,7 @@ class colaborador extends Component {
                 <span>Por favor ingresa la referencia que te otorgo tu empresa</span>
                 <div className="row justify-content-center mt-2">
                     <div className="col-12 col-xl-4 col-md-6">
-                        <input type="text" name="nombre" className="form-control rounded-1" placeholder="Nombre de tu empresa"
+                        <input type="text" name="nombre" className="form-control rounded-1" placeholder="Ingresa tu referencia"
                         onChange={(e)=>{this.setState({referencia: e.target.value} );}}
                         />
                     </div>

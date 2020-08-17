@@ -79,7 +79,7 @@ class nuevoperfil extends Component {
         }
         if (verificar==inputs.length) {
             if (firebase.database().ref('puestos').push(this.state)) {
-                this.notifyTopCenter('success','Cliente Actualizado Correctamente')
+                this.notifyTopCenter('success','Perfil de puesto agregado correctamente')
                 this.setState({
                     general:'',
                     diaria:'',

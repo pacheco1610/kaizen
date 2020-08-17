@@ -5,7 +5,10 @@ import store from './store/store'
 
 
 import Dashboard from "./components/layout/Dashboard";
-import Login from './components/layout/login/login'
+import Tareas from './components/layout/secciones/tareas/tareas'
+import Clientes from './components/layout/secciones/clientes/clientes'
+import Colaboradores from './components/layout/secciones/colaboradores/colaboradores'
+import Puestos from './components/layout/secciones/perfilDePuestos/perfil'
 import AuthContext  from "./context/AuthContext";
 import '@trendmicro/react-datepicker/dist/react-datepicker.css';
 import '@trendmicro/react-dropdown/dist/react-dropdown.css';
@@ -21,12 +24,21 @@ export default class App extends Component {
                 <AuthContext>
                         <Router>
                             <Switch>
-                                <Route exact path="/">
-                                    <Dashboard />
-                                </Route>
-                                <Route exact path="/login">
-                                    <Login />
-                                </Route>
+                                <Dashboard>
+                                    <Route exact path="/">
+                                        <Tareas/>
+                                    </Route>
+                                    <Route exact path="/clientes">
+                                        <Clientes/>
+                                    </Route>
+                                    <Route exact path="/colaboradores">
+                                        <Colaboradores/>
+                                    </Route>
+                                    <Route exact path="/perfildepuestos">
+                                        <Puestos/>
+                                    </Route>
+
+                                </Dashboard>
                             </Switch>
                         </Router>
                 </AuthContext>

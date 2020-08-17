@@ -78,13 +78,16 @@ body{
   
 }
 .button-sidebar{
-    color: #ffffff;
     background-color: #1c212e !important;
     font-size: 16px;
     font-weight: 700;
     font-family: 'Nunito', sans-serif;
     border: none !important;
     color: #c9d2e7;
+    text-decoration: none;
+}
+.button-sidebar:link{
+  text-decoration: none;
 }
 .title-dashboard{
     font-weight: 700;
@@ -97,6 +100,7 @@ body{
     margin-left: 40%;
 }
 .button-sidebar:hover{
+  color: #fff !important;
     background-color: #303b50 !important;
 }
 .button-sidebar:focus{
