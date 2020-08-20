@@ -14,7 +14,7 @@ class nuevoperfil extends Component {
             mensual:'',
             responsabilidaddiaria:'',
             responsabilidades:[],
-            habilidades:[],
+            habilidades:this.props.habilidades,
             Puesto:'',
             Departamento:'',
             Organigrama:'',
@@ -56,13 +56,23 @@ class nuevoperfil extends Component {
     }
     check(habilidad){
         const {habilidades}=this.state
+        const filtrado = habilidades.filter(habilidadFil=>habilidadFil.key!== habilidad.key)
+        
         if (this.check) {
-           habilidades.push({
-               key:habilidad.key,
-               tiulo:habilidad.titulo
-           })
+            filtrado.push({
+                checked:"true",
+                key:habilidad.key,
+                titulo:habilidad.titulo
+            })
+           this.setState({habilidades:filtrado})
+           
         }
         else{
+            filtrado.push({
+                checked:"",
+                key:habilidad.key,
+                titulo:habilidad.titulo
+            })
             this.setState({habilidades:this.state.habilidades.filter(item=>item.key!=habilidad.key)})
         }
     }
@@ -308,7 +318,8 @@ class nuevoperfil extends Component {
 }
 const mapStateProps = state =>({
     habilidades:state.habilidades,
-    usuario:state.info
+    usuario:state.info,
+    puestos:state.puestos,
 })
 
 export default connect(mapStateProps,null)(nuevoperfil)

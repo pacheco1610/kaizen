@@ -74,10 +74,10 @@ class lista extends Component {
                                     {this.props.tareasAsignadas.map(tarea=>
                                     <div className="col-12 rounded btn-row-check" key={tarea.key}>
                                     <div className="row align-items-center">
-                                        <div className="col-1 listtarea">
+                                        <div className="col-2 listtarea">
                                             <button className="btn btn-check"><i className="far fa-check-circle"></i></button>
                                         </div>
-                                        <div className="col-11 textTarea"  onClick={()=>this.toggleRight(tarea.titulo,1,tarea)}>
+                                        <div className="col-10 textTarea"  onClick={()=>this.toggleRight(tarea.titulo,1,tarea)}>
                                             {tarea.titulo}
                                             <span className="fecha-tarea float-right">{moment(tarea.fecha).format('DD/MM/YYYY')}</span>
                                         </div>

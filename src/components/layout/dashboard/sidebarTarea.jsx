@@ -1,12 +1,15 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import moment from "moment";
+import firebase from 'firebase'
+import { ToastContainer, toast } from 'react-toastify';
 
 class sidebarTareas extends Component {
     constructor(props){
         super(props)
         this.state={
-            btnComentar:'btncomentarioToggle'
+            btnComentar:'btncomentarioToggle',
+            comentario:""
         }
     }
     ToggleComentar(){
@@ -18,19 +21,55 @@ class sidebarTareas extends Component {
     }
     renerHistorial(){
        if(this.props.tarea.historial) {
-           return(
-            this.props.tarea.historial.map(historia=>
-                <div className="col-12 col-md-12 col-xl-12  mb-2">
-                    <img src={historia.photoURL} alt="..." className="img-colaborador rounded-circle img-thumbnail mr-2" />
+        return(
+        this.props.tarea.historial.map(historia=>{
+            if (historia.tHistorial==="Historial") {
+                return(
+                    <div className="col-12 col-md-12 col-xl-12  mb-2">
+                        <img src={historia.photoURL} alt="..." className="img-colaborador rounded-circle img-thumbnail mr-2" />
                         <span className="title-tarea mr-2">{historia.displayname} {historia.texto} {moment(historia.fecha).format('DD/MM/YYYY')}</span>
-                </div>
-            )
-           )
+                    </div>
+                )
+            }else if(historia.tHistorial==="Comentario"){
+                return(
+                    <div className="col-12 col-md-12 col-xl-12  mb-2">
+                        <img src={historia.photoURL} alt="..." className="img-colaborador rounded-circle img-thumbnail mr-2" /><span className="title-tarea">{historia.displayname} <labe className="ml-1">{moment(historia.fecha).format('DD/MM/YYYY')}</labe></span>
+                        <span className="title-tarea text-white btn-block ml-5">{historia.texto}</span>
+                    </div>
+                )
+            }
+
+        })
+        )
         }
     }
+    comentar(){
+        if (this.state.comentario!="") {
+            const historial=[]
+            historial.push(
+                {
+                    photoURL:this.props.usuario.photoURL,
+                    displayname:this.props.usuario.displayname,
+                    texto:this.state.comentario,
+                    fecha:moment().format('YYYY-MM-DD'),
+                    tHistorial:"Comentario"
+                }
+            )
+        if(firebase.database().ref('tareas/'+this.props.tarea.key).update({historial:historial})){
+            this.setState({comentario:""})
+        }
+        }else{
+            this.notifyTopCenter('warning',"Evidencia tu tarea")
+        }
+    }
+    notifyTopCenter = (type,text) =>
+    toast[type](text, {
+        position: toast.POSITION.TOP_CENTER
+    })
     render() {
         return (
             <div id="sidebar-right">
+                <ToastContainer />
                 <div className="container">
                     <div className="row">
                         <div className="col-12">
@@ -79,12 +118,12 @@ class sidebarTareas extends Component {
                                     </div>
                                     <div className="row p-2">
                                         <div className="col-12">
-                                            <div className="container comentarios">
-                                                <textarea onClick={()=>this.ToggleComentar()} className="textareaComent" placeholder="Realiza un comentario o pregunta" name="" id=""></textarea>
+                                            <div className="container comentarios p-2">
+                                                <textarea onClick={()=>this.ToggleComentar()} className="textareaComent" placeholder="Realiza un comentario o pregunta" onChange={(e)=>this.setState({comentario:e.target.value})} value={this.state.comentario} />
                                                 <div className={`row p-1 ${this.state.btnComentar}`}>
                                                     <div className="col-xl-8"></div>
                                                     <div className="col-xl-4">
-                                                        <button className="btn btn-general btn-block">Comentar</button>
+                                                        <button onClick={()=>this.comentar()} className="btn btn-general btn-block">Comentar</button>
                                                     </div>
                                                 </div>
                                             </div>

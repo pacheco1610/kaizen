@@ -467,8 +467,8 @@ input[type=text]{
   grid-template-columns: 4% 96% !important;
 }
 .bg-check{
-  color:#fff;
-  background-color: #00bf9c ;
+  color:#fff !important;
+  background-color: #00bf9c !important;
 }
 .bg-avance{
   color:#fff;
@@ -512,4 +512,7 @@ input[type=text]{
 }
 .btn-colaboradores:hover{
   background-color: #eee;
+}
+.evidencia{
+  display: none;
 }

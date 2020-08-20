@@ -9,7 +9,7 @@ class Updatenuevoperfil extends Component {
         this.state={
             responsabilidaddiaria:'',
             responsabilidades:this.props.InfoPuesto.responsabilidades,
-            habilidades:[],
+            habilidades:this.props.InfoPuesto.habilidades,
             Puesto:this.props.InfoPuesto.Puesto,
             Departamento:this.props.InfoPuesto.Departamento,
             Organigrama:this.props.InfoPuesto.Organigrama,
@@ -37,7 +37,7 @@ class Updatenuevoperfil extends Component {
 
     addResponsabilidad(tipo){
         const {responsabilidades}=this.state
-        if (this.state[tipo]!=="") {
+        if (this.state[tipo]!==""&& this.state[tipo]!==undefined) {
             responsabilidades.push({
                 key:this.state.responsabilidades.length,
                 responsabilidad:this.state[tipo],
@@ -51,15 +51,13 @@ class Updatenuevoperfil extends Component {
     }
     check(habilidad){
         const {habilidades}=this.state
-        if (this.check) {
-           habilidades.push({
-               key:habilidad.key,
-               tiulo:habilidad.titulo
-           })
-        }
-        else{
-            this.setState({habilidades:this.state.habilidades.filter(item=>item.key!==habilidad.key)})
-        }
+        habilidades.map(habilidadFil=>{
+            if (habilidadFil.key === habilidad.key) {
+                habilidadFil.checked=!habilidadFil.checked;
+                this.setState({habilidades:this.state.habilidades})
+            }
+        })
+
     }
     onChange(event,id){
         this.setState({[id]:event.target.value})
@@ -73,37 +71,9 @@ class Updatenuevoperfil extends Component {
             }
         }
         if (verificar==inputs.length) {
-            if (firebase.database().ref('puestos').push(this.state)) {
-                this.notifyTopCenter('success','Cliente Actualizado Correctamente')
-                this.setState({
-                    general:'',
-                    diaria:'',
-                    semanal:'',
-                    quincenal:'',
-                    mensual:'',
-                    responsabilidaddiaria:'',
-                    responsabilidades:[],
-                    habilidades:[],
-                    Puesto:'',
-                    Departamento:'',
-                    Organigrama:'',
-                    Horario:'',
-                    Proposito:'',
-                    Directamente:'',
-                    Edad:'',
-                    Sexo:'',
-                    Escolaridad:'',
-                    Experiencia:'',
-                    Manejo:'',
-                    Oficina:'',
-                    Otros:'',
-                    Elaboro:'',
-                    Reviso:'',
-                    Autorizo:'',
-                    Fecha:'',
-                    empresa:this.props.InfoPuesto.empresa,
-                    key:this.props.InfoPuesto.key
-                })
+            if (firebase.database().ref(`puestos/${this.props.InfoPuesto.uid}`).update(this.state)) {
+                this.notifyTopCenter('success','Perfil de puesto actualizado correctamente')
+
             } 
         }
         else{
@@ -279,13 +249,14 @@ class Updatenuevoperfil extends Component {
             {this.state.habilidades.map(habilidad=>
                 <div className="col-12 col-xl-6 col-md-4 mt-2" key={habilidad.titulo}>
                     <div className="form-check">
-                        <input onChange={(e)=>this.check(habilidad)} id={habilidad.key} className="form-check-input" type="checkbox" name={habilidad.key} />
+                        <input onClick={(e)=>this.check(habilidad)} id={habilidad.key} checked={habilidad.checked} className="form-check-input" type="checkbox"  name={habilidad.key} />
                         <label className="form-check-label">
                             {habilidad.titulo}
                         </label>
                     </div>
                 </div>
             )}
+
             <div className="col-12 text-center mt-4 border-bottom">
                 <label className="title-dashboard">Responsables de documentar la descripción de puesto</label>
             </div>
@@ -313,7 +284,8 @@ class Updatenuevoperfil extends Component {
     }
 }
 const mapStateProps = state =>({
-    InfoPuesto:state.InfoPuesto
+    InfoPuesto:state.InfoPuesto, 
+    habilidades:state.habilidades
 })
 
 export default connect(mapStateProps,null)(Updatenuevoperfil)

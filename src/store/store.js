@@ -32,6 +32,8 @@ const reducerMenu=(state =  initialState,action)=>{
                 return({...state,permisos:state.permisos.concat(action.permisos)})
         case 'puestos':
                 return({...state,puestos:state.puestos.concat(action.puestos)})
+        case 'updatePuestos':
+                return({...state,puestos:action.puestos})
         case 'InfoPuesto':
             return({...state,InfoPuesto:action.InfoPuesto})
         case 'habilidades':

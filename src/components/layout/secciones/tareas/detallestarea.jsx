@@ -2,15 +2,46 @@ import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import moment from "moment";
 import { ToastContainer, toast } from 'react-toastify';
-import Evidencia from './evidencia'
+import firebase from 'firebase'
 
 class detallestarea extends Component {
+    constructor(props){
+        super(props)
+        this.state={
+            evidencia:""
+        }
+    }
     tareaFinalizada(tarea){
-        this.notifyTopCenter('success',<Evidencia tarea={tarea}/>)
+        
+        //this.notifyTopCenter('success',<Evidencia tarea={tarea}/>)
+        document.getElementById("evidencia").classList.toggle("evidencia")
+    }
+    Tareaevidenciada(){
+        if (this.state.evidencia!="") {
+            const historial=[]
+            firebase.database().ref('tareas/'+this.props.tarea.key+'/responsables').once("value").then((snapshot)=>{
+                firebase.database().ref('tareas/'+this.props.tarea.key+'/responsables/'+snapshot.val().findIndex(responsable => responsable.referencia === this.props.usuario.referencia)).update({estatustarea:'realizada',evidencia:this.state.evidencia})
+                historial.push(
+                    {
+                        photoURL:this.props.usuario.photoURL,
+                        displayname:this.props.usuario.displayname,
+                        texto:'termino la tarea',
+                        fecha:moment().format('YYYY-MM-DD'),
+                        tHistorial:"Historial"
+                    }
+                )
+                firebase.database().ref('tareas/'+this.props.tarea.key).update({historial:historial})
+            }
+        )
+        document.getElementById('wrapper-Container').classList.toggle('toggled')
+        }else{
+            this.notifyTopCenter('warning',"Evidencia tu tarea")
+        }
+        
     }
     notifyTopCenter = (type,text) =>
     toast[type](text, {
-        position: toast.POSITION.BOTTOM_LEFT
+        position: toast.POSITION.TOP_CENTER
     })
     render() { 
         return (
@@ -98,6 +129,16 @@ class detallestarea extends Component {
                     <div className="row">
                         <div className="col-12">
                             <button onClick={()=>this.tareaFinalizada(this.props.tarea)} className="btn btn-block btn-general"><i className="far fa-check-circle"></i> Finalizar Tarea</button>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-12 mb-2 evidencia" id="evidencia">
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="container comentarios p-2 mt-3 mb-2">
+                                <textarea className="btn-block textareaComent" placeholder="Realiza un comentario o pregunta" onChange={(e)=>this.setState({evidencia:e.target.value})} value={this.state.evidencia}/>
+                            </div>
+                            <button onClick={()=>this.Tareaevidenciada()} className="btn btn-block bg-check">Evidenciar Tarea</button>
                         </div>
                     </div>
                 </div>

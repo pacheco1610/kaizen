@@ -62,7 +62,16 @@ class AuthContext extends Component {
                     })
                     /*-------------------------------PUESTOS------------------------------------ */
                     firebase.database().ref('puestos').orderByChild('empresa').equalTo(snapshot.val().empresa).on('child_added',snap=>{
-                        this.props.puestos(snap.val())
+                        const uid = {uid:snap.key}
+                        const concat = Object.assign(snap.val(),uid)
+                        this.props.puestos(concat)
+                    })
+                    firebase.database().ref('puestos').orderByChild('empresa').equalTo(snapshot.val().empresa).on('child_changed',snap=>{
+                        const uid = {uid:snap.key}
+                        const concat = Object.assign(snap.val(),uid)
+                        const arrayUpdate = this.props.constPuestos.filter(puesto=>puesto.uid!==snap.key)
+                        arrayUpdate.push(concat)
+                        this.props.updatePuestos(arrayUpdate)
                     })
                      /*-------------------------------PUESTOS------------------------------------ */
                     firebase.database().ref('habilidades').on('child_added',snap=>{
@@ -87,7 +96,7 @@ class AuthContext extends Component {
                                             fechaCreada:snap.val().fechaCreada,
                                             responsables:snap.val().responsables,
                                             titulo:snap.val().titulo,
-                                            historial:snap.val().historial
+                                            historial:snap.val().historial,
                                         })
                                         }}
                                     )
@@ -121,7 +130,7 @@ class AuthContext extends Component {
                                         fechaCreada:snap.val().fechaCreada,
                                         responsables:snap.val().responsables,
                                         titulo:snap.val().titulo,
-                                        historial:snap.val().historial
+                                        historial:snap.val().historial,
                                     })
                                     this.props.UpdateTareas(tareasFilter)    
                                     }
@@ -150,7 +159,8 @@ class AuthContext extends Component {
                                     fechaCreada:snap.val().fechaCreada,
                                     responsables:snap.val().responsables,
                                     titulo:snap.val().titulo,
-                                    historial:snap.val().historial
+                                    historial:snap.val().historial,
+                                    tHistorial:snap.val().tHistorial
                                 })
                             }
                         })
@@ -175,7 +185,8 @@ class AuthContext extends Component {
                                         fechaCreada:snap.val().fechaCreada,
                                         responsables:snap.val().responsables,
                                         titulo:snap.val().titulo,
-                                        historial:snap.val().historial
+                                        historial:snap.val().historial,
+                                        tHistorial:snap.val().tHistorial
                                     })
                                     this.props.TareasAsignadasUpdate(tareasFilter)
                                     
@@ -202,7 +213,8 @@ const mapStateProps = state =>({
     clientes: state.clientes,
     colaboradoresInfo:state.colaboradores,
     TareasUpdate:state.Tareas,
-    tareasAsignadas:state.tareasAsignadas
+    tareasAsignadas:state.tareasAsignadas,
+    constPuestos:state.puestos
 })
 
 const mapDispatchToprops = dispatch =>({
@@ -288,6 +300,12 @@ const mapDispatchToprops = dispatch =>({
         dispatch({
             type:'TareasAsignadasUpdate',
             tareaasignadaUpdate
+        })
+    },
+    updatePuestos(puestos){
+        dispatch({
+            type:'updatePuestos',
+            puestos
         })
     }
 })
