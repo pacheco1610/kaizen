@@ -34,7 +34,7 @@ class sidebarTareas extends Component {
                 return(
                     <div className="col-12 col-md-12 col-xl-12  mb-2">
                         <img src={historia.photoURL} alt="..." className="img-colaborador rounded-circle img-thumbnail mr-2" /><span className="title-tarea">{historia.displayname} <labe className="ml-1">{moment(historia.fecha).format('DD/MM/YYYY')}</labe></span>
-                        <span className="title-tarea text-white btn-block ml-5">{historia.texto}</span>
+                        <span className="title-tarea btn-block ml-5">{historia.texto}</span>
                     </div>
                 )
             }
@@ -44,23 +44,41 @@ class sidebarTareas extends Component {
         }
     }
     comentar(){
-        if (this.state.comentario!="") {
-            const historial=[]
-            historial.push(
-                {
+        if (this.props.tarea.historial) {
+            const historial=this.props.tarea.historial
+            if (this.state.comentario!="") {
+                    historial.push({
                     photoURL:this.props.usuario.photoURL,
                     displayname:this.props.usuario.displayname,
                     texto:this.state.comentario,
                     fecha:moment().format('YYYY-MM-DD'),
                     tHistorial:"Comentario"
-                }
-            )
-        if(firebase.database().ref('tareas/'+this.props.tarea.key).update({historial:historial})){
-            this.setState({comentario:""})
-        }
+                })
+            if(firebase.database().ref('tareas/'+this.props.tarea.key).update({historial:historial})){
+                this.setState({comentario:""})
+            }
+            }else{
+                this.notifyTopCenter('warning',"Escribe tu comentario")
+            }
         }else{
-            this.notifyTopCenter('warning',"Evidencia tu tarea")
+           const historial=[]
+                if (this.state.comentario!="") {
+                        historial.push({
+                        photoURL:this.props.usuario.photoURL,
+                        displayname:this.props.usuario.displayname,
+                        texto:this.state.comentario,
+                        fecha:moment().format('YYYY-MM-DD'),
+                        tHistorial:"Comentario"
+                    })
+            if(firebase.database().ref('tareas/'+this.props.tarea.key).update({historial:historial})){
+                this.setState({comentario:""})
+            }
+            }else{
+                this.notifyTopCenter('warning',"Escribe tu comentario")
+            }
         }
+        
+
     }
     notifyTopCenter = (type,text) =>
     toast[type](text, {

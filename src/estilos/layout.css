@@ -477,7 +477,7 @@ input[type=text]{
 .bg-fotter{
   border-bottom-left-radius: .5em;
   border-bottom-right-radius: .5em;
-  background-color: #1c212e;
+  background-color: #f8f9fa !important;
 }
 .textareaComent{
   width: 100%;

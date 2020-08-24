@@ -73,7 +73,6 @@ class Updatenuevoperfil extends Component {
         if (verificar==inputs.length) {
             if (firebase.database().ref(`puestos/${this.props.InfoPuesto.uid}`).update(this.state)) {
                 this.notifyTopCenter('success','Perfil de puesto actualizado correctamente')
-
             } 
         }
         else{

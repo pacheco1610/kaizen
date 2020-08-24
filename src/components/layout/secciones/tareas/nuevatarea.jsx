@@ -82,7 +82,8 @@ class nuevatarea extends Component {
             empresa:this.props.usuario.empresa,
             asignador:this.props.usuario,
             estatus:'pendiente',
-            fechaCreada:moment().format('YYYY-MM-DD')
+            fechaCreada:moment().format('YYYY-MM-DD'),
+            
         }
         if (firebase.database().ref('tareas').push(tarea)) {
             this.notifyTopCenter('success','Tarea agregada correctamente')
@@ -138,6 +139,7 @@ class nuevatarea extends Component {
                                         <DatePicker
                                             date={this.state.date}
                                             onSelect={date =>this.HandleClickCalendar(date)}
+                                            
                                         />
                                          <TimeInput
                                             value={this.state.time}

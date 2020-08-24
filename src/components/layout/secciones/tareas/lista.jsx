@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import moment from "moment";
+import Table from './table'
 
 class lista extends Component {
     constructor(props){
@@ -43,6 +44,12 @@ class lista extends Component {
         this.props.tareadetalles(tarea)
         this.props.UpdateShow('show')
     }
+    toggleRightEdit=(provid,render,tarea)=>{
+        this.setState({tarea:tarea})
+        this.props.toggleRight(provid,render)
+        this.props.tareadetalles(tarea)
+        this.props.UpdateShow('show')
+    }
     render() {
         return (
             <div className="col-12">
@@ -52,14 +59,26 @@ class lista extends Component {
                         <div id="conTusTareas" className="container">
                             <div className="row">
                                 {this.props.tareas.map(tarea=>
-                                    <div className="col-12 rounded btn-row-check" id={tarea.key} key={tarea.key}>
-                                        <div className="row align-items-center">
-                                            <div className="col-1 listtarea">
-                                                <button className="btn btn-check"><i className="far fa-check-circle"></i></button>
-                                            </div>
-                                            <div className="col-11 textTarea"  onClick={()=>this.toggleRight(tarea.titulo,1,tarea)}>
-                                                <span>{tarea.titulo}</span>
-                                                <span className="fecha-tarea float-right">{moment(tarea.fecha).format('DD/MM/YYYY')}</span>
+                                    <div className="col-12 rounded btn-row-check p-2" id={tarea.key} key={tarea.key}>
+                                        <div className="container">
+                                            <div className="row align-items-center" onClick={()=>this.toggleRight(tarea.titulo,1,tarea)}>
+                                                <div className="col-5 textTarea" >
+                                                    <span>{tarea.titulo}</span>
+                                                </div>
+                                                <div className="col-5 textTarea">
+                                                    {tarea.responsables.map(responsable=>{
+                                                        if (responsable.estatustarea==="realizada") {
+                                                            return(<span className="badge bg-check rounded mr-1 p-1">{responsable.displayname}</span>)
+                                                        }
+                                                        if (responsable.estatustarea==="pendiente") {
+                                                            return(<span className="badge bg-light rounded mr-1 p-1">{responsable.displayname}</span>)
+                                                        }
+                                                       
+                                                    })}
+                                                </div>
+                                                <div className="col-2 textTarea">
+                                                    <span className="fecha-tarea float-right">{moment(tarea.fecha).format('DD/MM/YYYY')}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -70,21 +89,33 @@ class lista extends Component {
                     <div className="col-12">
                         <h4 className="title-dashboard"><button className="btn" onClick={()=>this.toggleTarea('TareasAsignadas')}><i id="TareasAsignadas" className="fas fa-angle-down"></i></button>Tareas Asignadas</h4>
                         <div  id="conTareasAsignadas" className="container">
-                                    <div className="row">
-                                    {this.props.tareasAsignadas.map(tarea=>
-                                    <div className="col-12 rounded btn-row-check" key={tarea.key}>
-                                    <div className="row align-items-center">
-                                        <div className="col-2 listtarea">
-                                            <button className="btn btn-check"><i className="far fa-check-circle"></i></button>
-                                        </div>
-                                        <div className="col-10 textTarea"  onClick={()=>this.toggleRight(tarea.titulo,1,tarea)}>
-                                            {tarea.titulo}
-                                            <span className="fecha-tarea float-right">{moment(tarea.fecha).format('DD/MM/YYYY')}</span>
+                                <div className="row">
+                                {this.props.tareasAsignadas.map(tarea=>
+                                    <div className="col-12 rounded btn-row-check p-2" id={tarea.key} key={tarea.key}>
+                                        <div className="container">
+                                            <div className="row align-items-center" onClick={()=>this.toggleRightEdit(tarea.titulo,2,tarea)}>
+                                                <div className="col-5 textTarea" >
+                                                    <span>{tarea.titulo}</span>
+                                                </div>
+                                                <div className="col-5 textTarea">
+                                                    {tarea.responsables.map(responsable=>{
+                                                        if (responsable.estatustarea==="realizada") {
+                                                            return(<span className="badge bg-check rounded mr-1 p-1">{responsable.displayname}</span>)
+                                                        }
+                                                        if (responsable.estatustarea==="pendiente") {
+                                                            return(<span className="badge bg-light rounded mr-1 p-1">{responsable.displayname}</span>)
+                                                        }
+                                                       
+                                                    })}
+                                                </div>
+                                                <div className="col-2 textTarea">
+                                                    <span className="fecha-tarea float-right">{moment(tarea.fecha).format('DD/MM/YYYY')}</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                                 )} 
-                                    </div>
+                                </div>
                         </div>
                     </div>
                 </div>

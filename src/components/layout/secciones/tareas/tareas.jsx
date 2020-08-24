@@ -4,6 +4,7 @@ import Modal from '../../../modals/modal'
 import Lista from './lista'
 import Ntarea from './nuevatarea'
 import DetallesTarea from './detallestarea'
+import DetallesTareaEdit from './detallestareaEdit'
 import {connect} from 'react-redux'
 
 class tareas extends Component {
@@ -41,6 +42,8 @@ class tareas extends Component {
                 return(<Ntarea/>)
             case 1:
                 return(<DetallesTarea/>)
+            case 2:
+                return(<DetallesTareaEdit/>)
             default:
                 break;
         }
