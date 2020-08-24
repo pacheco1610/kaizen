@@ -17,21 +17,13 @@ class detallestarea extends Component {
         }
     }
 
-    tareaFinalizada(tarea){
-        //this.notifyTopCenter('success',<Evidencia tarea={tarea}/>)
-        document.getElementById("evidencia").classList.toggle("evidencia")
-    }
-    DropdownColaboradorOut(){
-        if (this.state.filter.length===0) {
-         document.querySelector('.dropdownCol').classList.add('toggle')
-        }
-    }
     DropdownColaborador(){
-         document.querySelector('.dropdownCol').classList.remove('toggle')
+        document.querySelector('.dropdownCol').classList.toggle('toggle')
+        document.querySelector('.dropdownCol-Cover').classList.toggle('toggle')
     }
     removeResponsable(responsable){
         firebase.database().ref('tareas/'+this.props.tarea.key+'/responsables').once("value").then((snapshot)=>{
-            const historial =[]
+            
                 if (this.props.tarea.historial) {
                     const historial=this.props.tarea.historial
                     historial.push({
@@ -41,34 +33,65 @@ class detallestarea extends Component {
                         fecha:moment().format('YYYY-MM-DD'),
                         tHistorial:"Historial"
                     })
+                    firebase.database().ref('tareas/'+this.props.tarea.key).update({historial:historial})
                 }else{
+                    const historial =[]
                     historial.push({
-                        photoURL:this.props.usuario.photoURL,
-                        displayname:this.props.usuario.displayname,
+                        photoURL:responsable.photoURL,
+                        displayname:responsable.displayname,
                         texto:'fue eliminado de la tarea',
                         fecha:moment().format('YYYY-MM-DD'),
                         tHistorial:"Historial"
                     })
+                    firebase.database().ref('tareas/'+this.props.tarea.key).update({historial:historial})
                 }
-            firebase.database().ref('tareas/'+this.props.tarea.key+'/responsables/'+snapshot.val().findIndex(responsable1 => responsable1.referencia === responsable.referencia)).update({estatustarea:'ELIMINADO'})
-            firebase.database().ref('tareas/'+this.props.tarea.key).update({historial:historial})
+            firebase.database().ref('tareas/'+this.props.tarea.key+'/responsables/'+snapshot.val().findIndex(responsable1 => responsable1.referencia === responsable.referencia)).update({estatustarea:'eliminado'})
         })
     }
     addResponsable(responsable){
-        const responsables=this.props.tarea.responsables
-        responsables.push({
-                    displayname:responsable.displayname,
-                    empresa:responsable.empresa,
-                    estatus:responsable.estatus,
-                    permisos:responsable.permisos,
-                    photoURL:responsable.photoURL,
-                    referencia:responsable.referencia,
-                    estatustarea:'pendiente',
-                    fechaAsignada:moment().format('YYYY-MM-DD')
+        firebase.database().ref('tareas/'+this.props.tarea.key+'/responsables').once("value").then((snapshot)=>{
+            const Index = snapshot.val().findIndex(responsable1 => responsable1.referencia === responsable.referencia)
+            if (Index !== -1) {
+                firebase.database().ref('tareas/'+this.props.tarea.key+'/responsables/'+Index).update({estatustarea:'pendiente'})
+            }else{
+                const responsables=this.props.tarea.responsables
+                responsables.push({
+                            displayname:responsable.displayname,
+                            empresa:responsable.empresa,
+                            estatus:responsable.estatus,
+                            permisos:responsable.permisos,
+                            photoURL:responsable.photoURL,
+                            referencia:responsable.referencia,
+                            estatustarea:'pendiente',
+                            fechaAsignada:moment().format('YYYY-MM-DD')
+                    })
+                    firebase.database().ref('tareas/'+this.props.tarea.key).update({responsables:responsables})
+                    }
             })
-            firebase.database().ref('tareas/'+this.props.tarea.key).update({responsables:responsables})
-            this.setState({responsables:responsables,text:'',filter:this.state.filter.filter(res=> res.referencia!== responsable.referencia)})
-            document.querySelector('.dropdownCol').classList.add('toggle')
+            
+                if (this.props.tarea.historial) {
+                    const historial=this.props.tarea.historial
+                    historial.push({
+                        photoURL:responsable.photoURL,
+                        displayname:responsable.displayname,
+                        texto:'fue agregado a la tarea',
+                        fecha:moment().format('YYYY-MM-DD'),
+                        tHistorial:"Historial"
+                    })
+                    firebase.database().ref('tareas/'+this.props.tarea.key).update({historial:historial})
+                }else{
+                    const historial =[]
+                    historial.push({
+                        photoURL:responsable.photoURL,
+                        displayname:responsable.displayname,
+                        texto:'fue agregado a la tarea',
+                        fecha:moment().format('YYYY-MM-DD'),
+                        tHistorial:"Historial"
+                    })
+                    firebase.database().ref('tareas/'+this.props.tarea.key).update({historial:historial})
+                }
+                document.querySelector('.dropdownCol').classList.toggle('toggle')
+                document.querySelector('.dropdownCol-Cover').classList.toggle('toggle')
     }
     filter(event){
         var text = event.target.value
@@ -85,47 +108,44 @@ class detallestarea extends Component {
               text:text
           })
        }
-    Tareaevidenciada(){
-        if (this.state.evidencia!="") {
-            firebase.database().ref('tareas/'+this.props.tarea.key+'/responsables').once("value").then((snapshot)=>{
-                const historial =[]
-                if (this.props.tarea.historial) {
-                    const historial=this.props.tarea.historial
-                    historial.push({
-                        photoURL:this.props.usuario.photoURL,
-                        displayname:this.props.usuario.displayname,
-                        texto:'termino la tarea',
-                        fecha:moment().format('YYYY-MM-DD'),
-                        tHistorial:"Historial"
-                    })
-                }else{
-                    historial.push({
-                        photoURL:this.props.usuario.photoURL,
-                        displayname:this.props.usuario.displayname,
-                        texto:'termino la tarea',
-                        fecha:moment().format('YYYY-MM-DD'),
-                        tHistorial:"Historial"
-                    })
-                }
-                firebase.database().ref('tareas/'+this.props.tarea.key+'/responsables/'+snapshot.val().findIndex(responsable => responsable.referencia === this.props.usuario.referencia)).update({estatustarea:'realizada',evidencia:this.state.evidencia})
-                firebase.database().ref('tareas/'+this.props.tarea.key).update({historial:historial})
-            }
-        )
-        document.getElementById('wrapper-Container').classList.toggle('toggled')
-        }else{
-            this.notifyTopCenter('warning',"Evidencia tu tarea")
-        }
-        
-    }
+
     notifyTopCenter = (type,text) =>
     toast[type](text, {
         position: toast.POSITION.TOP_CENTER
     })
-       HandleClickCalendar(date){
+    HandleClickCalendar(date){
     this.setState({ date: date });
+    firebase.database().ref(`tareas/${this.props.tarea.key}/`).update({fecha:date})
     document.querySelector('.dropdwonToggle').classList.remove('dropdown---open---1ju75')
     document.querySelector('.dropdwonToggle').classList.remove('buttons---open---1ju75')
     document.querySelector('.btn-edit-dropp').setAttribute("aria-expanded", "false")
+   }
+   texTarea(e){
+    firebase.database().ref(`tareas/${this.props.tarea.key}/`).update({descripcion:e.target.value})
+    var el = document.getElementById('Descripcion')
+    setTimeout(function(){
+      el.style.cssText = 'height:auto; padding:0';
+      // for box-sizing other than "content-box" use:
+      // el.style.cssText = '-moz-box-sizing:content-box';
+      el.style.cssText = 'height:' + el.scrollHeight + 'px';
+    },0);
+   }
+   autorizarTarea(){
+       let realizado=0
+        this.props.tarea.responsables.map(responsable=>{
+            if (responsable.estatustarea==="realizada") {
+                realizado=realizado+1
+            }else if(responsable.estatustarea==="eliminado"){
+                realizado=realizado+1
+            }
+        })
+        if (realizado === this.props.tarea.responsables.length) {
+            firebase.database().ref(`tareas/${this.props.tarea.key}/`).update({estatus:"realizada"})
+            document.getElementById('wrapper-Container').classList.toggle('toggled')
+        }
+        else{
+            this.notifyTopCenter("warning","No todos los colaboradores realizaron la tarea")
+        }
    }
     render() { 
         return (
@@ -146,7 +166,7 @@ class detallestarea extends Component {
                                         <DateInput
                                             value={this.state.date}
                                             onChange={value => {
-                                                this.setState({ date: value });
+                                                this.HandleClickCalendar(value);
                                             }}
                                         />
                                     </Dropdown.Toggle>
@@ -220,41 +240,34 @@ class detallestarea extends Component {
                                 )}
                                 <div className="col-12 col-md-12 col-xl-12">
                                     <span className="title-tarea btn-block">Agregar Responsables</span>
-                                    <div className="TextResponsables">
-                                        <input value={this.state.text} onChange={(text) => this.filter(text)} onBlur={()=>this.DropdownColaboradorOut()} onFocus={()=>this.DropdownColaborador()} className="inputResponsables" placeholder="" type="text"/>
+                                    <div className="TextResponsables"  id="responsables">
+                                        <input value={this.state.text} onChange={(text) => this.filter(text)} onFocus={()=>this.DropdownColaborador()} className="inputResponsables" placeholder="" type="text"/>
                                     </div>
                                     <div className="dropdownCol shadow toggle">
                                         {this.state.filter.map(colaborador=>
                                             <div key={colaborador.referencia} className="col-12 btn btn-colaboradores" onClick={()=>this.addResponsable(colaborador)}><span className="title-colaborador"><img src={colaborador.photoURL} alt="..." className="img-colaborador rounded-circle img-thumbnail mr-2" /> {colaborador.displayname} <small>{colaborador.puesto.Puesto}</small></span></div>
                                         )}
                                     </div>
+                                    <div onClick={()=>this.DropdownColaborador()} className="dropdownCol-Cover toggle"></div>
                             </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="col-12 mb-2">
+                <div className="col-12 mb-3 mt-3">
                     <div className="row">
                         <div className="col-12 col-md-12 col-xl-12">
-                            <span className="title-tarea  mr-2">Descripción <br/>{this.props.tarea.descripcion}</span>
-                           
+                            <div className="TextResponsables" >
+                            <span className="title-tarea btn-block">Descripción</span>
+                                <textarea id="Descripcion" className="TextDescripcion" value={this.props.tarea.descripcion} onChange={(e)=>this.texTarea(e)} placeholder="Agreaga descripción"/>  
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div className="col-12 mb-2">
                     <div className="row">
                         <div className="col-12">
-                            <button onClick={()=>this.tareaFinalizada(this.props.tarea)} className="btn btn-block btn-general"><i className="far fa-check-circle"></i> Finalizar Tarea</button>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-12 mb-2 evidencia" id="evidencia">
-                    <div className="row">
-                        <div className="col-12">
-                            <div className="container comentarios p-2 mt-3 mb-2">
-                                <textarea className="btn-block textareaComent" placeholder="Realiza un comentario o pregunta" onChange={(e)=>this.setState({evidencia:e.target.value})} value={this.state.evidencia}/>
-                            </div>
-                            <button onClick={()=>this.Tareaevidenciada()} className="btn btn-block bg-check">Evidenciar Tarea</button>
+                            <button onClick={()=>this.autorizarTarea()} className="btn btn-block btn-general"><i className="far fa-check-circle"></i> Autorizar Tarea</button>
                         </div>
                     </div>
                 </div>

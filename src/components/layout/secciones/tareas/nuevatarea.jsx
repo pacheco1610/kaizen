@@ -22,13 +22,9 @@ class nuevatarea extends Component {
         };
    }
 
-   DropdownColaboradorOut(){
-       if (this.state.filter.length===0) {
-        document.querySelector('.dropdownCol').classList.add('toggle')
-       }
-   }
    DropdownColaborador(){
-        document.querySelector('.dropdownCol').classList.remove('toggle')
+        document.querySelector('.dropdownCol').classList.toggle('toggle')
+        document.querySelector('.dropdownCol-Cover').classList.toggle('toggle')
    }
    filter(event){
     var text = event.target.value
@@ -64,7 +60,8 @@ class nuevatarea extends Component {
             fechaAsignada:moment().format('YYYY-MM-DD')
         })
         this.setState({responsables:responsables,text:'',filter:this.state.filter.filter(res=> res.referencia!== responsable.referencia)})
-        document.querySelector('.dropdownCol').classList.add('toggle')
+        document.querySelector('.dropdownCol').classList.toggle('toggle')
+        document.querySelector('.dropdownCol-Cover').classList.toggle('toggle')
    }
    HandleClickCalendar(date){
     this.setState({ date: date });
@@ -159,19 +156,20 @@ class nuevatarea extends Component {
                                 <span className="title-tarea mr-2">Responsables</span> 
                             </div>
                             <div className="col-12 col-md-12 col-xl-12">
-                                <div className="TextResponsables">
+                                <div className="TextResponsables" id="responsables">
                                     {this.state.responsables.map(responsable=>
                                             <span key={responsable.referencia} className="badge badge-pill badge-light badgedResponsable m-1">
                                                 <label htmlFor="" className="mt-1" >{responsable.displayname}</label> <button className="btn btn-default btn-circle ml-1" onClick={()=>this.removeResponsable(responsable)} >x</button>
                                             </span>
                                         )}
-                                    <input value={this.state.text} onChange={(text) => this.filter(text)} onBlur={()=>this.DropdownColaboradorOut()} onFocus={()=>this.DropdownColaborador()} className="inputResponsables" placeholder="" type="text"/>
+                                    <input value={this.state.text} onChange={(text) => this.filter(text)} onFocus={()=>this.DropdownColaborador()} className="inputResponsables" placeholder="" type="text"/>
                                 </div>
                                 <div className="dropdownCol shadow toggle">
                                     {this.state.filter.map(colaborador=>
                                         <div key={colaborador.referencia} className="col-12 btn btn-colaboradores" onClick={()=>this.addResponsable(colaborador)}><span className="title-colaborador"><img src={colaborador.photoURL} alt="..." className="img-colaborador rounded-circle img-thumbnail mr-2" /> {colaborador.displayname} <small>{colaborador.puesto.Puesto}</small></span></div>
                                     )}
                                 </div>
+                                <div onClick={()=>this.DropdownColaborador()} className="dropdownCol-Cover toggle"></div>
                             </div>
                         </div>
                         

@@ -11,15 +11,9 @@ class detallestarea extends Component {
             evidencia:""
         }
     }
-    tareaFinalizada(tarea){
-        
-        //this.notifyTopCenter('success',<Evidencia tarea={tarea}/>)
-        document.getElementById("evidencia").classList.toggle("evidencia")
-    }
     Tareaevidenciada(){
         if (this.state.evidencia!="") {
             firebase.database().ref('tareas/'+this.props.tarea.key+'/responsables').once("value").then((snapshot)=>{
-                const historial =[]
                 if (this.props.tarea.historial) {
                     const historial=this.props.tarea.historial
                     historial.push({
@@ -29,7 +23,9 @@ class detallestarea extends Component {
                         fecha:moment().format('YYYY-MM-DD'),
                         tHistorial:"Historial"
                     })
+                    firebase.database().ref('tareas/'+this.props.tarea.key).update({historial:historial})
                 }else{
+                    const historial =[]
                     historial.push({
                         photoURL:this.props.usuario.photoURL,
                         displayname:this.props.usuario.displayname,
@@ -37,16 +33,32 @@ class detallestarea extends Component {
                         fecha:moment().format('YYYY-MM-DD'),
                         tHistorial:"Historial"
                     })
+                    firebase.database().ref('tareas/'+this.props.tarea.key).update({historial:historial})
                 }
                 firebase.database().ref('tareas/'+this.props.tarea.key+'/responsables/'+snapshot.val().findIndex(responsable => responsable.referencia === this.props.usuario.referencia)).update({estatustarea:'realizada',evidencia:this.state.evidencia})
-                firebase.database().ref('tareas/'+this.props.tarea.key).update({historial:historial})
+                
             }
         )
+        document.getElementById("evidencia").classList.toggle("evidencia")
         document.getElementById('wrapper-Container').classList.toggle('toggled')
         }else{
             this.notifyTopCenter('warning',"Evidencia tu tarea")
         }
         
+    }
+    renderFinalizar(){
+        return(
+            this.props.tarea.responsables.map(responsable=>{
+                if (responsable.referencia===this.props.usuario.referencia) {
+                    if (responsable.estatustarea==="realizada") {
+                        return(<span className="btn btn-block btn-general"><i className="far fa-check-circle"></i> Esperando Autorizacion</span>)
+                    }else{
+                        return(<button onClick={()=>document.getElementById("evidencia").classList.toggle("evidencia")} className="btn btn-block btn-general"><i className="far fa-check-circle"></i> Finalizar Tarea</button>)
+                    }
+                }
+            }
+            )
+        )
     }
     notifyTopCenter = (type,text) =>
     toast[type](text, {
@@ -137,7 +149,7 @@ class detallestarea extends Component {
                 <div className="col-12 mb-2">
                     <div className="row">
                         <div className="col-12">
-                            <button onClick={()=>this.tareaFinalizada(this.props.tarea)} className="btn btn-block btn-general"><i className="far fa-check-circle"></i> Finalizar Tarea</button>
+                           {this.renderFinalizar()}
                         </div>
                     </div>
                 </div>

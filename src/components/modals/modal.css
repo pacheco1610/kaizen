@@ -8,7 +8,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 1000000;
   transition: ease 1s;
 }
 .Modal__container {

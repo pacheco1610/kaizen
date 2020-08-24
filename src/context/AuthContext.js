@@ -83,8 +83,9 @@ class AuthContext extends Component {
                        /*-------------------------------Tareas------------------------------------ */
                             /*--------------------------Tarea Pendiente---------------------*/
                             firebase.database().ref('tareas').orderByChild('empresa').equalTo(snapshot.val().empresa).on('child_added',snap=>{
+                                if (snap.val().asignador.referencia!==snapshot.val().referencia&&snap.val().estatus==="pendiente"){
                                     snap.val().responsables.map(responsable =>
-                                        {if(responsable.referencia===snapshot.val().referencia&&responsable.estatustarea==='pendiente'){
+                                        {if(responsable.referencia===snapshot.val().referencia){
                                         this.props.Tareas({
                                             key:snap.key,
                                             asignador:snap.val().asignador,
@@ -100,54 +101,40 @@ class AuthContext extends Component {
                                         })
                                         }}
                                     )
+                                }
 
                             })
                             firebase.database().ref('tareas').orderByChild('empresa').equalTo(snapshot.val().empresa).on('child_changed',snap=>{
-                                let comprobar=0
+                                if (snap.val().asignador.referencia!==snapshot.val().referencia&&snap.val().estatus==="pendiente") {
                                 snap.val().responsables.map(responsable =>
                                     {
-                                    if(responsable.referencia===snapshot.val().referencia&&responsable.estatustarea==='realizada'){
-                                        comprobar=comprobar+1  
+                                    if(responsable.referencia===snapshot.val().referencia){
+                                            let tareasFilter=this.props.TareasUpdate.filter(item=>item.key!==snap.key)
+                                            tareasFilter.push({
+                                                key:snap.key,
+                                                asignador:snap.val().asignador,
+                                                descripcion:snap.val().descripcion,
+                                                empresa:snap.val().empresa,
+                                                estatustarea:snap.val().estatustarea,
+                                                estatus:snap.val().estatus,
+                                                fecha:snap.val().fecha,
+                                                fechaCreada:snap.val().fechaCreada,
+                                                responsables:snap.val().responsables,
+                                                titulo:snap.val().titulo,
+                                                historial:snap.val().historial,
+                                            })
+                                            this.props.UpdateTareas(tareasFilter)    
                                     }
                                 })
-
-
-                                if (comprobar==1) {
-                                    let tareasFilter=this.props.TareasUpdate.filter(item => item.key!==snap.key)
-                                    this.props.UpdateTareas(tareasFilter)
-                                    document.getElementById('wrapper-Container').classList.toggle('toggled')
-                                }else{
-                                    if (snap.val().asignador.referencia!==snapshot.val().referencia) {
-                                    let tareasFilter=this.props.TareasUpdate.filter(item=>item.key!==snap.key)
-                                    tareasFilter.push({
-                                        key:snap.key,
-                                        asignador:snap.val().asignador,
-                                        descripcion:snap.val().descripcion,
-                                        empresa:snap.val().empresa,
-                                        estatustarea:snap.val().estatustarea,
-                                        estatus:snap.val().estatus,
-                                        fecha:snap.val().fecha,
-                                        fechaCreada:snap.val().fechaCreada,
-                                        responsables:snap.val().responsables,
-                                        titulo:snap.val().titulo,
-                                        historial:snap.val().historial,
-                                    })
-                                    this.props.UpdateTareas(tareasFilter)    
-                                    }
-                                     
-                                }
+                            }else{
+                                let tareasFilter=this.props.TareasUpdate.filter(item=>item.key!==snap.key)
+                                this.props.UpdateTareas(tareasFilter)    
+                            }
                        
                         })
                          /*--------------------------Tareas Asignadas---------------------*/
                          firebase.database().ref('tareas').orderByChild('asignador/referencia').equalTo(snapshot.val().referencia).on('child_added',snap=>{
-                            let comprobar=0;
-                            snap.val().responsables.map(responsable =>
-                                {
-                                    if(responsable.referencia===snapshot.val().referencia) {
-                                        comprobar=comprobar+1;
-                                    }
-                                })
-                            if (comprobar===0&&snap.val().asignador.referencia===snapshot.val().referencia) {
+                            if (snap.val().asignador.referencia===snapshot.val().referencia&&snap.val().estatus==="pendiente") {
                                 this.props.TareasAsignadas({
                                     key:snap.key,
                                     asignador:snap.val().asignador,
@@ -165,14 +152,7 @@ class AuthContext extends Component {
                             }
                         })
                         firebase.database().ref('tareas').orderByChild('asignador/referencia').equalTo(snapshot.val().empresa).on('child_changed',snap=>{
-                            let comprobar=0;
-                            snap.val().responsables.map(responsable =>
-                                {
-                                    if(responsable.referencia===snapshot.val().referencia) {
-                                        comprobar=comprobar+1;
-                                    }
-                                })
-                            if (comprobar===0&&snap.val().asignador.referencia===snapshot.val().referencia) {
+                            if (snap.val().asignador.referencia===snapshot.val().referencia&&snap.val().estatus==="pendiente") {
                                 let tareasFilter=this.props.tareasAsignadas.filter(item=>item.key!==snap.key)
                                     tareasFilter.push({
                                         key:snap.key,
@@ -189,7 +169,9 @@ class AuthContext extends Component {
                                         tHistorial:snap.val().tHistorial
                                     })
                                     this.props.TareasAsignadasUpdate(tareasFilter)
-                                    
+                            }else{
+                                let tareasFilter=this.props.tareasAsignadas.filter(item=>item.key!==snap.key)
+                                this.props.TareasAsignadasUpdate(tareasFilter)
                             }
                         })
                     /*-------------------------------MENU--------------------------------------- */

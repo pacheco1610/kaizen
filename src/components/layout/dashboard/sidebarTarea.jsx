@@ -21,10 +21,11 @@ class sidebarTareas extends Component {
     }
     renerHistorial(){
        if(this.props.tarea.historial) {
+        const array = this.props.tarea.historial.reverse()
         return(
-        this.props.tarea.historial.map(historia=>{
+            array.map(historia=>{
             if (historia.tHistorial==="Historial") {
-                return(
+                return( 
                     <div className="col-12 col-md-12 col-xl-12  mb-2">
                         <img src={historia.photoURL} alt="..." className="img-colaborador rounded-circle img-thumbnail mr-2" />
                         <span className="title-tarea mr-2">{historia.displayname} {historia.texto} {moment(historia.fecha).format('DD/MM/YYYY')}</span>
