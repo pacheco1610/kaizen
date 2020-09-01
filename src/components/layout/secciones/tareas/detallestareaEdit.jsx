@@ -186,6 +186,7 @@ class detallestarea extends Component {
                             <span className="title-tarea mr-2">Responsables</span>
                             <div className="row">
                                 {this.props.tarea.responsables.map(responsable=>{
+                                    
                                     if (responsable.estatustarea==="realizada") {
                                         return(
                                             <div className="col-12 p-2 bg-check rounded mb-2">
