@@ -6,6 +6,7 @@ import Dropdown from '@trendmicro/react-dropdown';
 import moment from "moment";
 import firebase from 'firebase'
 import { ToastContainer, toast } from 'react-toastify';
+import Prueba from './pruebaCalendar'
 
 require('moment/locale/es.js');
 class nuevatarea extends Component {
@@ -147,6 +148,18 @@ class nuevatarea extends Component {
                                         />
                                     </Dropdown.Menu>
                                 </Dropdown>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-12 mb-2">
+                        <div className="row">
+                            <div className="col-12 col-md-12 col-xl-12">
+                                <span className="title-tarea">
+                                    Relacionar con cliente
+                                </span>
+                            </div>
+                            <div className="col-12 col-md-12 col-xl-12">
+                                <Prueba/>
                             </div>
                         </div>
                     </div>
