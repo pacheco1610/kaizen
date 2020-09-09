@@ -5,6 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import firebase from 'firebase'
 import DatePicker, { DateInput , TimeInput } from '@trendmicro/react-datepicker';
 import Dropdown from '@trendmicro/react-dropdown';
+import Modal from '../../../modals/modal'
 
 class detallestarea extends Component {
     constructor(props){
@@ -14,12 +15,17 @@ class detallestarea extends Component {
             date: moment(this.props.tarea.fecha).format('YYYY-MM-DD'),
             responsables:[],
             filter:this.props.colaboradores,
+            ModalOpen:false,
+            cliente:[]
         }
     }
 
     DropdownColaborador(){
         document.querySelector('.dropdownCol').classList.toggle('toggle')
         document.querySelector('.dropdownCol-Cover').classList.toggle('toggle')
+    }
+    isClose=()=>{
+        this.setState({ModalOpen:false})
     }
     removeResponsable(responsable){
         firebase.database().ref('tareas/'+this.props.tarea.key+'/responsables').once("value").then((snapshot)=>{
@@ -147,6 +153,21 @@ class detallestarea extends Component {
             this.notifyTopCenter("warning","No todos los colaboradores realizaron la tarea")
         }
    }
+   renderCliente(cliente){
+        this.setState({ModalOpen:true,cliente:cliente})
+   }
+   renderClientes(){
+       if (this.props.tarea.clientes) {
+            return(
+                this.props.tarea.clientes.map(cliente=>
+                    <a className="title-tarea btn mb-2" onClick={()=>this.renderCliente(cliente)}><u>{cliente.empresa}</u></a>
+                )
+            )
+       }
+       else{
+           return(<span className="title-tarea btn-block mb-2">Sin Clientes Relacionados</span>)
+       }
+   }
     render() { 
         return (
             <div className="container">
@@ -242,7 +263,7 @@ class detallestarea extends Component {
                                 <div className="col-12 col-md-12 col-xl-12">
                                     <span className="title-tarea btn-block">Agregar Responsables</span>
                                     <div className="TextResponsables"  id="responsables">
-                                        <input value={this.state.text} onChange={(text) => this.filter(text)} onFocus={()=>this.DropdownColaborador()} className="inputResponsables" placeholder="" type="text"/>
+                                        <input value={this.state.text} onChange={(text) => this.filter(text)} onFocus={()=>this.DropdownColaborador()} className="inputSelect" placeholder="" type="text"/>
                                     </div>
                                     <div className="dropdownCol shadow toggle">
                                         {this.state.filter.map(colaborador=>
@@ -250,13 +271,17 @@ class detallestarea extends Component {
                                         )}
                                     </div>
                                     <div onClick={()=>this.DropdownColaborador()} className="dropdownCol-Cover toggle"></div>
-                            </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className="col-12 mb-3 mt-3">
                     <div className="row">
+                        <div className="col-12 col-md-12 col-xl-12">
+                            <span className="title-tarea btn-block">Clientes Relacionados:</span>
+                            {this.renderClientes()}
+                        </div>
                         <div className="col-12 col-md-12 col-xl-12">
                             <div className="TextResponsables" >
                             <span className="title-tarea btn-block">Descripción</span>
@@ -273,6 +298,31 @@ class detallestarea extends Component {
                     </div>
                 </div>
             </div>
+            <Modal isOpen={this.state.ModalOpen}  isClose={this.isClose}>
+                <div className="container">
+                    <div className="row">
+                        <div className="col-12 mb-2">
+                            <h1>Detalles del cliente</h1>
+                        </div>
+                        <div className="col-6 mb-2">
+                            <span className="title-tarea btn-block mb-2">Nombre:</span>
+                            {this.state.cliente.nombre}
+                        </div>
+                        <div className="col-6 mb-2">
+                            <span className="title-tarea btn-block mb-2">Apellido:</span>
+                            {this.state.cliente.apellido}
+                        </div>
+                        <div className="col-6 mb-2">
+                            <span className="title-tarea btn-block mb-2">Email:</span>
+                            {this.state.cliente.email}
+                        </div>
+                        <div className="col-6 mb-2">
+                            <span className="title-tarea btn-block mb-2">telefono:</span>
+                            {this.state.cliente.telefono}
+                        </div>
+                    </div>
+                </div>
+            </Modal>
         </div>
         )
     }

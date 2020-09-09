@@ -6,7 +6,7 @@ import Dropdown from '@trendmicro/react-dropdown';
 import moment from "moment";
 import firebase from 'firebase'
 import { ToastContainer, toast } from 'react-toastify';
-import Prueba from './pruebaCalendar'
+import InputSelect from '../../inputSelect/input'
 
 require('moment/locale/es.js');
 class nuevatarea extends Component {
@@ -19,13 +19,14 @@ class nuevatarea extends Component {
         responsables:[],
         filter:this.props.colaboradores,
         text:'',
-        time:moment().format('hh:mm:ss')
+        time:moment().format('hh:mm:ss'),
+        clientes:[]
         };
    }
 
    DropdownColaborador(){
-        document.querySelector('.dropdownCol').classList.toggle('toggle')
-        document.querySelector('.dropdownCol-Cover').classList.toggle('toggle')
+        document.querySelector('.dropColaboradores').classList.toggle('toggle')
+        document.querySelector('.dropColaboradores.dropdownCol-Cover').classList.toggle('toggle')
    }
    filter(event){
     var text = event.target.value
@@ -43,7 +44,7 @@ class nuevatarea extends Component {
       })
    }
    removeResponsable(responsable){
-       const {filter}=this.state
+    const {filter}=this.state
        let res = this.props.colaboradores.filter(colaborador => colaborador.referencia === responsable.referencia)
        filter.push(res[0])
     this.setState({responsables:this.state.responsables.filter(item=>item.referencia!==responsable.referencia)})
@@ -61,8 +62,8 @@ class nuevatarea extends Component {
             fechaAsignada:moment().format('YYYY-MM-DD')
         })
         this.setState({responsables:responsables,text:'',filter:this.state.filter.filter(res=> res.referencia!== responsable.referencia)})
-        document.querySelector('.dropdownCol').classList.toggle('toggle')
-        document.querySelector('.dropdownCol-Cover').classList.toggle('toggle')
+        document.querySelector('.dropColaboradores').classList.toggle('toggle')
+        document.querySelector('.dropColaboradores.dropdownCol-Cover').classList.toggle('toggle')
    }
    HandleClickCalendar(date){
     this.setState({ date: date });
@@ -81,6 +82,7 @@ class nuevatarea extends Component {
             asignador:this.props.usuario,
             estatus:'pendiente',
             fechaCreada:moment().format('YYYY-MM-DD'),
+            clientes:this.state.clientes
             
         }
         if (firebase.database().ref('tareas').push(tarea)) {
@@ -90,11 +92,12 @@ class nuevatarea extends Component {
              descripcion:'',
              date: moment().format('YYYY-MM-DD'),
              responsables:[],
-             filter:[],
+             filter:this.props.colaboradores,
              text:'',
              empresa:'',
              asignador:'',
-             estatus:''
+             estatus:'',
+             clientes:[]
             })
         }
        }else{
@@ -159,7 +162,11 @@ class nuevatarea extends Component {
                                 </span>
                             </div>
                             <div className="col-12 col-md-12 col-xl-12">
-                                <Prueba/>
+                                <InputSelect 
+                                name="ClienteRelacionado" 
+                                data={this.props.clientes}
+                                onSelect={(data)=>this.setState({clientes:data})}
+                                />
                             </div>
                         </div>
                     </div>
@@ -174,15 +181,15 @@ class nuevatarea extends Component {
                                             <span key={responsable.referencia} className="badge badge-pill badge-light badgedResponsable m-1">
                                                 <label htmlFor="" className="mt-1" >{responsable.displayname}</label> <button className="btn btn-default btn-circle ml-1" onClick={()=>this.removeResponsable(responsable)} >x</button>
                                             </span>
-                                        )}
-                                    <input value={this.state.text} onChange={(text) => this.filter(text)} onFocus={()=>this.DropdownColaborador()} className="inputResponsables" placeholder="" type="text"/>
+                                    )}
+                                    <input value={this.state.text} onChange={(text) => this.filter(text)} onFocus={()=>this.DropdownColaborador()} className="inputSelect" placeholder="" type="text"/>
                                 </div>
-                                <div className="dropdownCol shadow toggle">
+                                <div className="dropColaboradores dropdownCol shadow toggle">
                                     {this.state.filter.map(colaborador=>
                                         <div key={colaborador.referencia} className="col-12 btn btn-colaboradores" onClick={()=>this.addResponsable(colaborador)}><span className="title-colaborador"><img src={colaborador.photoURL} alt="..." className="img-colaborador rounded-circle img-thumbnail mr-2" /> {colaborador.displayname} <small>{colaborador.puesto.Puesto}</small></span></div>
                                     )}
                                 </div>
-                                <div onClick={()=>this.DropdownColaborador()} className="dropdownCol-Cover toggle"></div>
+                                <div onClick={()=>this.DropdownColaborador()} className="dropColaboradores dropdownCol-Cover toggle"></div>
                             </div>
                         </div>
                         
@@ -210,5 +217,6 @@ class nuevatarea extends Component {
 const mapStateProps = state =>({
     colaboradores:state.colaboradores,
     usuario:state.info,
+    clientes:state.clientes
 })
 export default connect(mapStateProps,null)(nuevatarea);

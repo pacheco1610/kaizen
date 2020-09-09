@@ -33,18 +33,15 @@ class AuthContext extends Component {
                     this.props.UpdateInfo(snapshot.val())
                     /*-------------------------------CLIENTES--------------------------------------- */
                     firebase.database().ref('clientes').orderByChild('idempresa').equalTo(snapshot.val().empresa).on('child_added',snap=>{
-                        let clientes={
-                            key:snap.key,
-                            info:snap.val()
-                        }
-                        this.props.Clientes(clientes)
+                        const uid = {uid:snap.key}
+                        const concat = Object.assign(snap.val(),uid)
+                        this.props.Clientes(concat)
                     })
                     firebase.database().ref('clientes').orderByChild('idempresa').equalTo(snapshot.val().empresa).on('child_changed',snap=>{
+                        const uid = {uid:snap.key}
+                        const concat = Object.assign(snap.val(),uid)
                         let clientes=this.props.clientes.filter(item => item.key!=snap.key)
-                        clientes.push({
-                            key:snap.key,
-                            info:snap.val()
-                        })
+                        clientes.push({concat})
                         this.props.UpdateClientes(clientes)
                     })
 
@@ -98,6 +95,7 @@ class AuthContext extends Component {
                                             responsables:snap.val().responsables,
                                             titulo:snap.val().titulo,
                                             historial:snap.val().historial,
+                                            clientes:snap.val().clientes
                                         })
                                         }}
                                     )
@@ -122,6 +120,7 @@ class AuthContext extends Component {
                                                 responsables:snap.val().responsables,
                                                 titulo:snap.val().titulo,
                                                 historial:snap.val().historial,
+                                                clientes:snap.val().clientes
                                             })
                                             this.props.UpdateTareas(tareasFilter)    
                                     }
@@ -147,7 +146,8 @@ class AuthContext extends Component {
                                     responsables:snap.val().responsables,
                                     titulo:snap.val().titulo,
                                     historial:snap.val().historial,
-                                    tHistorial:snap.val().tHistorial
+                                    tHistorial:snap.val().tHistorial,
+                                    clientes:snap.val().clientes
                                 })
                             }
                         })
@@ -166,7 +166,8 @@ class AuthContext extends Component {
                                         responsables:snap.val().responsables,
                                         titulo:snap.val().titulo,
                                         historial:snap.val().historial,
-                                        tHistorial:snap.val().tHistorial
+                                        tHistorial:snap.val().tHistorial,
+                                        clientes:snap.val().clientes
                                     })
                                     this.props.TareasAsignadasUpdate(tareasFilter)
                             }else{

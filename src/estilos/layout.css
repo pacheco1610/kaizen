@@ -435,17 +435,25 @@ input[type=text]{
   z-index: 11 !important;
   background-color: #fff;
 }
-.inputResponsables{
+.inputSelect{
   width: 100%;
   border: none !important;
   outline:none !important;
+}
+.inputTexto{
+  border-radius: .5rem;
+  width: 100% !important;
+  min-height: 90% !important;
+  border: 1px solid #e6e4e4 !important;
+  outline:none !important;
+  padding: 10px;
 }
 .dropdownCol{
   position: absolute;
   background-color: #ffffff;
   width: 100%;
   right: 0 !important; 
-  z-index: 10 !important;
+  z-index: 10000000 !important;
 }
 .dropdownCol-Cover{
   position: fixed;
@@ -478,7 +486,7 @@ input[type=text]{
   display: grid !important;
   grid-template-columns: 4% 96% !important;
 }
-.bg-check{
+.bg-checkdropdownCol {
   color:#fff !important;
   background-color: #00bf9c !important;
 }
